@@ -32,9 +32,9 @@ pipeline {
         stage('Build') {
             steps {
                 // TODO build an executable environment
-                dir('ci-pipeline') {
-                    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
-                }
+                //dir('ci-pipeline') {
+                //    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
+                //}
 
                 // Parse the $CI_MESSAGE
             }
@@ -45,14 +45,14 @@ pipeline {
                 sh 'linchpin -vvv up'
                 script {
 
-                    try {
-                        // Kick off tests
-                    }
+                //    try {
+                //        // Kick off tests
+                //    }
                     // Deprovision
-                    finally {
+                //    finally {
                         // Return any provisioned environments
-                        sh 'linchpin destroy'
-                    }
+                //        sh 'linchpin destroy'
+                //    }
                 }
             }
         }
