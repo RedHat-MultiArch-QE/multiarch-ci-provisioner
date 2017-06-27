@@ -47,15 +47,17 @@ node {
                         }
                     }
                 }
+
+
+            } catch (e) {
+                // If any exception occurs, mark the build as failed
+                currentBuild.result = 'FAILURE'
+                throw e
+            } finally {
+                currentBuild.displayName = "Build #: ${env.BUILD_NUMBER}"
+                currentBuild.description = "${currentBuild.result}"
+                archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
             }
-        } catch (e) {
-            // If any exception occurs, mark the build as failed
-            currentBuild.result = 'FAILURE'
-            throw e
-        } finally {
-            currentBuild.displayName = "Build #: ${env.BUILD_NUMBER}"
-            currentBuild.description = "${currentBuild.result}"
-            archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
         }
     }
 }
