@@ -33,7 +33,8 @@ node {
             }
 
             stage('Test') {
-                sh 'linchpin -vvv up'
+                // TODO Install linchpin
+                //sh 'linchpin -vvv up'
                 //    try {
                 //        // Kick off tests
                 //    }
