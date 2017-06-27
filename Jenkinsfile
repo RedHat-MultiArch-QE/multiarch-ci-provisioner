@@ -3,7 +3,7 @@
  *
  * Jenkins Pipeline to build and manage Atomic OpenShift
  */
-node('atomic-openshift') {
+node {
     agent any
 
     ansiColor('xterm') {
