@@ -14,23 +14,16 @@
 //    currentBuild.description = "${currentBuild.result}"
 //    archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
 //}
-pipeline {
-    agent: any
 
-    options: {
-        ansiColor('xterm')
-        timestamps
-    }
+node {
+    ansiColor('xterm') {
+        timestamps {
 
-    stages {
-        stage('Trigger') {
-            steps {
+            stage('Trigger') {
                 // TODO Set triggers for RPM build
             }
-        }
 
-        stage('Build') {
-            steps {
+            stage('Build') {
                 // TODO build an executable environment
                 //dir('ci-pipeline') {
                 //    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
@@ -38,28 +31,21 @@ pipeline {
 
                 // Parse the $CI_MESSAGE
             }
-        }
 
-        stage('Test') {
-            steps {
+            stage('Test') {
                 sh 'linchpin -vvv up'
-                script {
-
                 //    try {
                 //        // Kick off tests
                 //    }
-                    // Deprovision
+                // Deprovision
                 //    finally {
-                        // Return any provisioned environments
+                // Return any provisioned environments
                 //        sh 'linchpin destroy'
                 //    }
-                }
             }
-        }
 
-        // TODO implement publishing process
-        stage('Deploy') {
-            steps {
+            // TODO implement publishing process
+            stage('Deploy') {
                 // TODO Deploy changes
             }
         }
