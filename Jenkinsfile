@@ -56,7 +56,7 @@ node {
             } finally {
                 currentBuild.displayName = "Build #: ${env.BUILD_NUMBER}"
                 currentBuild.description = "${currentBuild.result}"
-                artifactArchiver(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
+                archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
             }
         }
     }
