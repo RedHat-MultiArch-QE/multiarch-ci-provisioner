@@ -42,20 +42,19 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Provision
                 sh 'linchpin -vvv up'
+                script {
 
-                try {
-                    // TODO Kickoff tests
-                }
-
-                // Deprovision
-                finally {
-                    // Return any provisioned environments
-                    sh 'linchpin destroy'
+                    try {
+                        // Kick off tests
+                    }
+                    // Deprovision
+                    finally {
+                        // Return any provisioned environments
+                        sh 'linchpin destroy'
+                    }
                 }
             }
-
         }
 
         // TODO implement publishing process
