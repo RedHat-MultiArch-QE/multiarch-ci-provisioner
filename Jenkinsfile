@@ -40,11 +40,12 @@ node {
                         }
                     }
 
-                    // TODO implement publishing process
-                    stage('Deploy') {
-                        steps {
-                            // TODO Deploy changes
-                        }
+                }
+
+                // TODO implement publishing process
+                stage('Deploy') {
+                    steps {
+                        // TODO Deploy changes
                     }
                 }
 
