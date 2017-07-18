@@ -3,8 +3,10 @@ inventory_layout:
   vars:
     hostname: __IP__
   hosts:
-    example-node:
+    cinch-group:
       count: 1
       host_groups:
-        - example
+        - rhel7
+        - certificate_authority
+        - repositories
 
