@@ -15,7 +15,7 @@
 //    archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
 //}
 
-node ('ci-pipeline') {
+node {
     ansiColor('xterm') {
         timestamps {
 
@@ -25,23 +25,23 @@ node ('ci-pipeline') {
 
             stage('Build') {
                 // TODO build an executable environment
-                //dir('ci-pipeline') {
-                //    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
-                //}
+                dir('ci-pipeline') {
+                    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
+                }
 
                 // Parse the $CI_MESSAGE
             }
 
             stage('Test') {
                 // TODO Install linchpin
-                //sh 'linchpin -vvv up'
+                sh 'linchpin -vvv up'
                 //    try {
                 //        // Kick off tests
                 //    }
                 // Deprovision
                 //    finally {
                 // Return any provisioned environments
-                //        sh 'linchpin destroy'
+                sh 'linchpin destroy'
                 //    }
             }
 
