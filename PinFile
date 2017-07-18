@@ -6,7 +6,7 @@
 #    topology: <string>
 #    inventory: <string>
 
-example_target:
-  topology: example-topology.yml
-  layout: example-layout.yml
+cinch:
+  topology: cinch.yml
+  layout: cinch.yml
 

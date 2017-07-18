@@ -38,9 +38,9 @@
 #        count: 1
 
 ---
-topology_name: beaker
+topology_name: cinch
 resource_groups:
-  - resource_group_name: test1
+  - resource_group_name: cinch-group
     res_group_type: beaker
     whiteboard: linchpin->beaker helloworld
     recipesets:
