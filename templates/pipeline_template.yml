@@ -4,44 +4,44 @@ metadata:
   name: aos-multiarch-e2e-pipeline
   labels:
     name: aos-multiarch-e2e-pipeline
-strategy:
-  type: JenkinsPipeline
-  jenkinsPipelineStrategy:
-    jenkinsfile: |-
-      node {
-	    ansiColor('xterm') {
-		timestamps {
+    strategy:
+      type: JenkinsPipeline
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          node {
+          ansiColor('xterm') {
+          timestamps {
 
-		    stage('Trigger') {
-		        // TODO Set triggers for RPM build
-		    }
+          stage('Trigger') {
+          // TODO Set triggers for RPM build
+          }
 
-		    stage('Build') {
-		        // TODO build an executable environment
-		        dir('ci-pipeline') {
-		            git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
-		        }
+          stage('Build') {
+          // TODO build an executable environment
+          dir('ci-pipeline') {
+          git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
+          }
 
-		        // Parse the $CI_MESSAGE
-		    }
+          // Parse the $CI_MESSAGE
+          }
 
-		    stage('Test') {
-		        // TODO Install linchpin
-		        sh 'linchpin -vvv up'
-		        //    try {
-		        //        // Kick off tests
-		        //    }
-		        // Deprovision
-		        //    finally {
-		        // Return any provisioned environments
-		        sh 'linchpin destroy'
-		        //    }
-		    }
+          stage('Test') {
+          // TODO Install linchpin
+          sh 'linchpin -vvv up'
+          //    try {
+          //        // Kick off tests
+          //    }
+          // Deprovision
+          //    finally {
+          // Return any provisioned environments
+          sh 'linchpin destroy'
+          //    }
+          }
 
-		    // TODO implement publishing process
-		    stage('Deploy') {
-		        // TODO Deploy changes
-		    }
-		}
-	    }
-	}
+          // TODO implement publishing process
+          stage('Deploy') {
+          // TODO Deploy changes
+          }
+          }
+          }
+          }
