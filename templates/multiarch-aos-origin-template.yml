@@ -1,0 +1,15 @@
+kind: BuildConfig
+apiVersion: v1
+metadata:
+  name: multiarch-aos-origin-pipeline
+  labels:
+    name: multiarch-aos-origin-pipeline
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/jaypoulz/multiarch-openshift-ci
+  strategy:
+    type: JenkinsPipeline
+    jenkinsPipelineStrategy:
+      jenkinsfilePath:
