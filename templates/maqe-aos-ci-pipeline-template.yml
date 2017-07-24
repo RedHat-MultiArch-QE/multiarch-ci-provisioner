@@ -1,0 +1,15 @@
+kind: BuildConfig
+apiVersion: v1
+metadata:
+  name: aos-multiarch-e2e-pipeline
+  labels:
+    name: aos-multiarch-e2e-pipeline
+spec:
+  source:
+    type: "Git"
+    git:
+      uri: "https://github.com/jaypoulz/maqe-aos-ci-pipeline"
+  strategy:
+    type: "JenkinsPipeline"
+    jenkinsPipelineStrategy:
+      jenkinsfilePath:
