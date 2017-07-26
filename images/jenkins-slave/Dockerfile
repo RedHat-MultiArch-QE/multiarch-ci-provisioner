@@ -1,4 +1,4 @@
-FROM openshift/jenkins-slave-base-rhel7 
+FROM openshift/jenkins-slave-base-centos7 
 RUN yum install -y epel-release; yum clean all
 
 # Setup certificates for RedHat
