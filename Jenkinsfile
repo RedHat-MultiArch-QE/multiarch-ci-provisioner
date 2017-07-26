@@ -15,7 +15,7 @@
 //    archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
 //}
 
-node {
+node ('multiarch-aos-jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
 
