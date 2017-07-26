@@ -1,5 +1,5 @@
 FROM openshift/jenkins-slave-base-centos7 
-RUN yum install -y epel-release wget java-devel; yum clean all
+RUN yum install -y epel-release wget java-1.8.0-openjdk git; yum clean all
 
 # Setup certificates for RedHat
 RUN /usr/bin/wget -O RedHat_CA.crt --no-check-certificate https://password.corp.redhat.com/cacert.crt && \
