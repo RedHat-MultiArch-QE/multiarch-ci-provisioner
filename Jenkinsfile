@@ -30,7 +30,9 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'ls -a /home/jenkins'
+                sh 'ls /'
+                sh 'cd /'
+                sh 'find | grep beaker'
 
                 // Parse the $CI_MESSAGE
             }
