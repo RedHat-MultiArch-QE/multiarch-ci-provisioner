@@ -30,9 +30,8 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'ls /home'
-                sh 'cd /home'
-                sh 'find | grep beaker'
+                sh 'bkr whoami'
+                sh 'cat /etc/beaker/client.conf'
 
                 // Parse the $CI_MESSAGE
             }
