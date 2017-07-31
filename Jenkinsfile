@@ -28,6 +28,9 @@ node ('multiarch-aos-jenkins-slave') {
                 dir('ci-pipeline') {
                     git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
                 }
+                
+                // Info gathering
+                sh 'cat ~/.beaker_client/config'
 
                 // Parse the $CI_MESSAGE
             }
