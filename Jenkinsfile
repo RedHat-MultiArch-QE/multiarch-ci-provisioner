@@ -30,8 +30,8 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'bkr whoami'
                 sh 'cat /etc/beaker/client.conf'
+                sh 'cat /etc/jenkins.keytab-multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
 
                 // Parse the $CI_MESSAGE
             }
