@@ -30,7 +30,7 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'ls -a'
+                sh 'ls -a /home/jenkins'
 
                 // Parse the $CI_MESSAGE
             }
