@@ -30,8 +30,7 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'find | grep beaker > tmp.txt'
-                sh 'cat tmp.txt'
+                sh 'ls -a'
 
                 // Parse the $CI_MESSAGE
             }
