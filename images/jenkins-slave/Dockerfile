@@ -11,3 +11,4 @@ RUN /usr/bin/curl > PnTDevOps_CA.crt --insecure -L https://engineering.redhat.co
 RUN /usr/bin/curl > RH-IT-Root-CA.crt --insecure -L https://password.corp.redhat.com/RH-IT-Root-CA.crt && \
     cat RH-IT-Root-CA.crt | /usr/bin/certutil -d sql:/etc/pki/nssdb -A -t "C,," -n RH-IT-Root-CA 
 
+RUN mkdir /etc/beaker; cp RH-IT-Root-CA.crt /etc/beaker/ ; echo > /etc/beaker
