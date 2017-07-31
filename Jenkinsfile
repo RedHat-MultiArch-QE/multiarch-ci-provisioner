@@ -30,7 +30,7 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'cat ~/.beaker_client/config'
+                sh 'find | grep beaker'
 
                 // Parse the $CI_MESSAGE
             }
