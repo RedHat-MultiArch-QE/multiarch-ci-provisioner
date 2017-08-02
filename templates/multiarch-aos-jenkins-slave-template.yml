@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: multiarch-aos-jenkins-slave-builder
+  template: jenkins-slave-builder
 metadata:
   annotations:
     description: Jenkins slave capable of running multiarch AOS tests
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: multiarch-aos-jenkins-slave-builder
+  name: jenkins-slave-builder
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -16,12 +16,12 @@ objects:
       slave-label: multiarch-aos-jenkins-slave
     labels:
       role: jenkins-slave
-    name: multiarch-aos-jenkins-slave
+    name: jenkins-slave
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: multiarch-aos-jenkins-slave
+    name: jenkins-slave
   spec:
     output:
       to:
@@ -43,7 +43,7 @@ parameters:
 - description: Git repository with Dockerfile and slave entrypoint.
   displayName: Repository URL
   name: SLAVE_REPO_URL
-  value: https://github.com/jaypoulz/multiarch-aos-ci-pipeline.git
+  value: https://gitlab.com/jaypoulz/multiarch-aos-ci-utils.git
 - description: The sub-directory inside the repository.
   displayName: Context Directory
   name: SLAVE_REPO_CONTEXTDIR
