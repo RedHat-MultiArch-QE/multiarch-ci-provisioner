@@ -15,7 +15,7 @@
 //    archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
 //}
 
-node ('master') {
+node ('multiarch-aos-jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
 
@@ -30,8 +30,9 @@ node ('master') {
                 }
                 
                 // Info gathering
-                sh 'cat /etc/beaker/client.conf'
-                sh 'cat /etc/jenkins.keytab-multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
+                //sh 'cat /etc/beaker/client.conf'
+                //sh 'cat /etc/jenkins.keytab-multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
+                sh 'echo $KERBEROS_PASSWORD | kinit $KERBEROS_USERNAME'
 
                 // Parse the $CI_MESSAGE
             }
