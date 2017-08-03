@@ -26,7 +26,7 @@ node ('jenkins-slave') {
             stage('Build') {
                 // TODO build an executable environment
                 dir('ci-pipeline') {
-                    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
+                    git 'https://github.com/jaypoulz/multiarch-aos-ci-pipeline'
                 }
                 
                 // Info gathering
@@ -37,16 +37,18 @@ node ('jenkins-slave') {
             }
 
             stage('Test') {
-                // TODO Install linchpin
-                sh 'cinchpin up'
-                //    try {
-                //        // Kick off tests
-                //    }
-                // Deprovision
-                //    finally {
-                // Return any provisioned environments
-                sh 'cinchpin destroy'
-                //    }
+                dir('ci-pipeline') {
+                    // TODO Install linchpin
+                    sh 'cinchpin up'
+                    //    try {
+                    //        // Kick off tests
+                    //    }
+                    // Deprovision
+                    //    finally {
+                    // Return any provisioned environments
+                    sh 'cinchpin destroy'
+                    //    }
+                }
             }
 
             // TODO implement publishing process
