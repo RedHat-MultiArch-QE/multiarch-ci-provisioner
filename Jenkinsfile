@@ -38,7 +38,7 @@ node ('jenkins-slave') {
 
             stage('Test') {
                 // TODO Install linchpin
-                sh 'cinchpin -vvv up'
+                sh 'cinchpin up'
                 //    try {
                 //        // Kick off tests
                 //    }
