@@ -32,7 +32,7 @@ node ('multiarch-aos-jenkins-slave') {
                 // Info gathering
                 //sh 'cat /etc/beaker/client.conf'
                 //sh 'cat /etc/jenkins.keytab-multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
-                sh 'kinit -k -t keytab jpoulin@REDHAT.COM'
+                sh 'kinit -k -t /keytab jpoulin@REDHAT.COM'
 
                 // Parse the $CI_MESSAGE
             }
