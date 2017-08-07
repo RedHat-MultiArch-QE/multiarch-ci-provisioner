@@ -18,34 +18,23 @@
 #
 # YMMV
 
-#---
-#topology_name: beaker
-#resource_groups:
-#  - resource_group_name: test1
-#    res_group_type: beaker
-#    job_group: none
-#    whiteboard: LinchPin beaker test
-#    recipesets:
-#      - distro: RHEL-7.3
-#        arch: x86_64
-#        keyvalue:
-#          - MEMORY>1000
-#          - DISKSPACE>20000
-#        hostrequire:
-#          - tag: hostname
-#            op: like
-#            value: %.eng.bos.redhat.com
-#        count: 1
-
 ---
 topology_name: cinch
 resource_groups:
   - resource_group_name: cinch-group
     res_group_type: beaker
+    job_group: ci-ops-multiarch-qe-aos
     whiteboard: linchpin->beaker helloworld
     recipesets:
-      - distro: RHEL-7%
-        variant: Server
+      - distro: "RHEL-7.%"
         arch: x86_64
+        variant: Server
         priority: Urgent
+        keyvalue:
+          - MEMORY>1000
+          - DISKSPACE>20000
+        hostrequires:
+          - tag: hostname
+            op: like
+            value: "%.eng.bos.redhat.com"
         count: 1
