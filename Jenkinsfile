@@ -15,7 +15,7 @@
 //    archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
 //}
 
-node ('multiarch-aos-jenkins-slave') {
+node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
 
@@ -26,28 +26,29 @@ node ('multiarch-aos-jenkins-slave') {
             stage('Build') {
                 // TODO build an executable environment
                 dir('ci-pipeline') {
-                    git 'https://github.com/CentOS-PaaS-SIG/ci-pipeline'
+                    git 'https://github.com/jaypoulz/multiarch-aos-ci-pipeline'
                 }
                 
                 // Info gathering
                 //sh 'cat /etc/beaker/client.conf'
                 //sh 'cat /etc/jenkins.keytab-multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
-                sh 'echo $KERBEROS_PASSWORD | kinit $KERBEROS_USERNAME'
 
                 // Parse the $CI_MESSAGE
             }
 
             stage('Test') {
-                // TODO Install linchpin
-                sh 'linchpin -vvv up'
-                //    try {
-                //        // Kick off tests
-                //    }
-                // Deprovision
-                //    finally {
-                // Return any provisioned environments
-                sh 'linchpin destroy'
-                //    }
+                dir('ci-pipeline') {
+                    // TODO Install linchpin
+                    sh 'cinchpin up'
+                    //    try {
+                    //        // Kick off tests
+                    //    }
+                    // Deprovision
+                    //    finally {
+                    // Return any provisioned environments
+                    sh 'cinchpin destroy'
+                    //    }
+                }
             }
 
             // TODO implement publishing process
