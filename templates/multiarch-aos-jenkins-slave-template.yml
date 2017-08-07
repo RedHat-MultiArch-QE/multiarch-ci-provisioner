@@ -13,10 +13,11 @@ objects:
   kind: ImageStream
   metadata:
     annotations:
-      slave-label: multiarch-aos-jenkins-slave
+      slave-label: jenkins-slave
     labels:
       role: jenkins-slave
     name: jenkins-slave
+    namespace: multiarch-aos
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
