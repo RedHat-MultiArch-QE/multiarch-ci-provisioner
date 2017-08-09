@@ -7,4 +7,6 @@ inventory_layout:
       count: 1
       host_groups:
         - rhel7
-
+        - certificate_authority
+        - repositories
+        - jenkins_slave

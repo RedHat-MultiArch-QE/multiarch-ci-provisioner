@@ -1,10 +1,13 @@
-jenkins_master_url: 'multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.rehdat.com' # URL to Jenkins master for the slave to connect to
+ansible_user: root
+ansible_private_key_file: "~/.ssh/id_rsa"
+ansible_connection: ssh
+# URL to Jenkins master for the slave to connect to
+jenkins_master_url: 'https://jenkins-multiarch-aos.10.8.173.196.xip.io'
 jslave_name: 'cinch-slave'
 jslave_label: 'cinch-slave'
 # If your Jenkins master requires authentication to connect a slave,
 # add credentials via the two variables below.  If anonymous users can
 # connect slaves to the master, do not include the following two
 # variables in this layout file.
-#jenkins_slave_username: 'automation-user'
-#jenkins_slave_password: 'jenkinsAPItoken'
-#
+#jenkins_slave_username: ''
+#jenkins_slave_password: ''
