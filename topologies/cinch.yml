@@ -38,5 +38,5 @@ resource_groups:
             op: like
             value: "%.eng.bos.redhat.com"
         repos:
-          repo: {_name: rhcert, _url: http://hwcert-server.khw.lab.eng.bos.redhat.com/packages/devel/RHEL7}
+          repo: {_name: "rhcert", _url: "http://hwcert-server.khw.lab.eng.bos.redhat.com/packages/devel/RHEL7"}
         count: 1
