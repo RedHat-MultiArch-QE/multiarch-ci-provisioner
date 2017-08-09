@@ -23,10 +23,10 @@ topology_name: cinch
 resource_groups:
   - resource_group_name: cinch-group
     res_group_type: beaker
-    job_group: ci-ops-multiarch-qe-aos
+#   job_group: ci-ops-multiarch-qe-aos
     whiteboard: linchpin->beaker helloworld
     recipesets:
-      - distro: "RHEL-7.%"
+      - distro: "RHEL-7.3"
         arch: x86_64
         variant: Server
         priority: Urgent
@@ -37,4 +37,6 @@ resource_groups:
           - tag: hostname
             op: like
             value: "%.eng.bos.redhat.com"
+        repos:
+          repo: {_name: rhcert, _url: http://hwcert-server.khw.lab.eng.bos.redhat.com/packages/devel/RHEL7}
         count: 1
