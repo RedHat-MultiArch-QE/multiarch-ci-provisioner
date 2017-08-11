@@ -15,7 +15,7 @@
 //    archiveArtifacts(allowEmptyArchive: true, artifacts: '**/logs/**,*.txt,*.groovy,**/job.*,**/inventory.*', excludes: '**/*.example', fingerprint: true)
 //}
 
-node ('jenkins-slave') {
+node ('cinch-slave') {
     ansiColor('xterm') {
         timestamps {
 
