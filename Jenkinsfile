@@ -20,25 +20,20 @@ node ('jenkins-slave') {
         timestamps {
 
             stage('Trigger') {
-                // TODO Set triggers for RPM build
+                // TODO Set triggers for Job Build
             }
 
-            stage('Build') {
+            stage('Provision') {
                 // TODO build an executable environment
                 dir('ci-pipeline') {
-                    git 'https://github.com/jaypoulz/multiarch-aos-ci-pipeline'
+                    git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                 }
-                
-                // Info gathering
-                //sh 'cat /etc/beaker/client.conf'
-                //sh 'cat /etc/jenkins.keytab-multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
 
                 // Parse the $CI_MESSAGE
             }
 
             stage('Test') {
                 dir('ci-pipeline') {
-                    // TODO Install linchpin
                     sh 'cinchpin up'
                     //    try {
                     //        // Kick off tests
@@ -46,14 +41,14 @@ node ('jenkins-slave') {
                     // Deprovision
                     //    finally {
                     // Return any provisioned environments
-                    sh 'cinchpin destroy'
+                    // sh 'cinchpin destroy'
                     //    }
                 }
             }
 
             // TODO implement publishing process
-            stage('Deploy') {
-                // TODO Deploy changes
+            stage('Kickoff Test') {
+                // TODO Kickoff Test
             }
         }
     }
