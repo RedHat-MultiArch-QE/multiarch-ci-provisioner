@@ -17,7 +17,7 @@ objects:
     labels:
       role: jenkins-slave
     name: jenkins-slave
-    namespace: multiarch-aos
+    namespace: multiarch-slave-provisioner
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
