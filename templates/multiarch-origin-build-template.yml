@@ -13,3 +13,15 @@ spec:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
       jenkinsfilePath:
+parameters:
+- description: Architecture
+  displayName: Architecture
+  name: ARCH
+- description: Origin Repository
+  displayName: Origin Repository
+  name: ORIGIN_REPO
+  value: https://github.com/detiber/origin.git
+- description: Origin Branch
+  displayName: Origin Branch
+  name: ORIGIN_BRANCH
+  value: ppc64le-rebase-wip
