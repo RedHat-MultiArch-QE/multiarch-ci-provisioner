@@ -8,7 +8,7 @@ spec:
   source:
     type: Git
     git:
-      uri: https://github.com/jaypoulz/multiarch-slave-provisioner
+      uri: https://github.com/jaypoulz/multiarch-ci-pipeline
   strategy:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
