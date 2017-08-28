@@ -1,9 +1,9 @@
 kind: BuildConfig
 apiVersion: v1
 metadata:
-  name: multiarch-slave-provisioner
+  name: provision-multiarch-slave
   labels:
-    name: multiarch-slave-provisioner
+    name: provision-multiarch-slave
 spec:
   source:
     type: Git
