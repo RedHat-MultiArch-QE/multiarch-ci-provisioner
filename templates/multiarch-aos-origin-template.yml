@@ -1,14 +1,14 @@
 kind: BuildConfig
 apiVersion: v1
 metadata:
-  name: multiarch-aos-origin-pipeline
+  name: origin-build
   labels:
-    name: multiarch-aos-origin-pipeline
+    name: origin-build
 spec:
   source:
     type: Git
     git:
-      uri: https://github.com/jaypoulz/multiarch-openshift-ci
+      uri: https://github.com/detiber/multiarch-openshift-ci
   strategy:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
