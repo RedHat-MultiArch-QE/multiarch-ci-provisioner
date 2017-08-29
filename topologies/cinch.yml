@@ -29,9 +29,6 @@ resource_groups:
         arch: ppc64le 
         variant: Server
         priority: Urgent
-        keyvalue:
-          - MEMORY>1000
-          - DISKSPACE>20000
         hostrequires:
           - tag: hostname
             op: like
