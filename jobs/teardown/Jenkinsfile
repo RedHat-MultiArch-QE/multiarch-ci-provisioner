@@ -1,0 +1,34 @@
+/**
+ * Jenkinsfile
+ *
+ * Jenkins Pipeline to build and manage Atomic OpenShift
+ */
+
+node ('jenkins-slave') {
+    ansiColor('xterm') {
+        timestamps {
+
+            // Prepare the cinch teardown inventory
+            stage('Setup') {
+                // TODO build an executable environment
+                dir('ci-pipeline') {
+                    git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                }
+
+                // Parse the $CI_MESSAGE
+            }
+
+            // Preform the actual teardown
+            stage('Teardown') {
+                dir('ci-pipeline') {
+                    sh 'cinchpin destroy'
+                }
+            }
+
+            // Notify calling test
+            stage('Notify') {
+                // TODO Kickoff Test
+            }
+        }
+    }
+}
