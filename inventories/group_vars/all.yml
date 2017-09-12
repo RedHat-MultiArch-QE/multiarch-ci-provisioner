@@ -11,3 +11,7 @@ rhel_base: http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/power-le/
 jenkins_master_url: 'https://multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
 jslave_name: 'cinch-slave'
 jslave_label: 'cinch-slave'
+
+# Jenkins Slave Registration Credentials
+jenkins_slave_username: "{{ lookup('env', 'JENKINS_SLAVE_USERNAME') }}"
+jenkins_slave_password: "{{ lookup('env', 'JENKINS_SLAVE_PASSWORD') }}"
