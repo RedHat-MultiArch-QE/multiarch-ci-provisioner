@@ -34,7 +34,7 @@ node ('jenkins-slave') {
 
             stage('Test') {
                 dir('ci-pipeline') {
-                    sh 'kinit -k -t /home/jenkins/keytab jpoulin@REDHAT.COM'
+                    //sh 'kinit -k -t /home/jenkins/keytab jpoulin@REDHAT.COM'
                     sh 'cinchpin up'
                     //    try {
                     //        // Kick off tests
