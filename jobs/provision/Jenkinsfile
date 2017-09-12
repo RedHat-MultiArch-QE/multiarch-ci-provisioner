@@ -27,28 +27,17 @@ node ('jenkins-slave') {
                 // TODO build an executable environment
                 dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                    sh 'cinchpin up'
                 }
-
-                // Parse the $CI_MESSAGE
             }
 
-            stage('Test') {
-                dir('ci-pipeline') {
-                    //sh 'kinit -k -t /home/jenkins/keytab jpoulin@REDHAT.COM'
-                    sh 'cinchpin up'
-                    //    try {
-                    //        // Kick off tests
-                    //    }
-                    // Deprovision
-                    //    finally {
-                    // Return any provisioned environments
-                    // sh 'cinchpin destroy'
-                    //    }
-                }
+            stage('Output') {
+                sh 'cat inventories/cinch.inventory'
+                sh 'cat resources/cinch.output'
             }
 
             // TODO implement publishing process
-            stage('Kickoff Test') {
+            stage('Notify') {
                 // TODO Kickoff Test
             }
         }
