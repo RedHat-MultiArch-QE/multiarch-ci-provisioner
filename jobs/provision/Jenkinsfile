@@ -32,8 +32,10 @@ node ('jenkins-slave') {
             }
 
             stage('Output') {
-                sh 'cat inventories/cinch.inventory'
-                sh 'cat resources/cinch.output'
+                dir('ci-pipeline') {
+                    sh 'cat inventories/cinch.inventory'
+                    sh 'cat resources/cinch.output'
+                }
             }
 
             // TODO implement publishing process
