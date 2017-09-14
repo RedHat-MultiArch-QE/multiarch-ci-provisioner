@@ -1,6 +1,10 @@
-#bash
+#!/bin/bash
+
+echo "Enter the IP address of the new cluster:"
+read ip_address
+route_address=$ip_address".xip.io"
 
 sudo iptables -F;
 sudo service docker restart;
-sudo oc cluster up --public-hostname=10.8.174.97 --routing-suffix=10.8.174.97.xip.io;
+oc cluster up --public-hostname=$ip_address --routing-suffix=$route_address;
 
