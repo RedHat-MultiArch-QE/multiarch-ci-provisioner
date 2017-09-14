@@ -1,4 +1,4 @@
-#bash
+#!/bin/bash
 sudo yum install -y git docker firewalld;
 curl -L -O https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz
 tar xvzf openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz;
@@ -22,3 +22,8 @@ sudo firewall-cmd --permanent --zone dockerc --add-port 53/udp;
 sudo firewall-cmd --permanent --zone dockerc --add-port 8053/udp;
 sudo firewall-cmd --permanent --zone dockerc --add-port 50000/tcp;
 sudo firewall-cmd --reload;
+
+# Allow sudoless docker
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
