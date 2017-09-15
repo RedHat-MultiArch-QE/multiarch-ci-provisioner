@@ -1,7 +1,5 @@
 ---
 inventory_layout:
-  vars:
-    hostname: __IP__
   hosts:
     cinch-group:
       count: 1

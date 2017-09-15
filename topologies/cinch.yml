@@ -22,15 +22,15 @@
 topology_name: cinch
 resource_groups:
   - resource_group_name: cinch-group
-    res_group_type: beaker
+    resource_group_type: beaker
+    job_group: multiarch-ci
     whiteboard: Cinch Slave for testing Multi-Arch AOS
     recipesets:
       - distro: "RHEL-7.3"
         arch: ppc64le 
         variant: Server
-        priority: Urgent
+        count: 1
         hostrequires:
           - tag: hostname
-            op: like
+            op: "="
             value: "ibm-p8-storage-03.khw.lab.eng.bos.redhat.com"
-        count: 1
