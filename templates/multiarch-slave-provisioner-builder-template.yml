@@ -46,7 +46,7 @@ parameters:
 - description: Git repository with Dockerfile and slave entrypoint.
   displayName: Repository URL
   name: SLAVE_REPO_URL
-  value: https://gitlab.com/jaypoulz/multiarch-aos-ci-utils.git
+  value: https://gitlab.com/jaypoulz/multiarch-ci-utils.git
 - description: The sub-directory inside the repository.
   displayName: Context Directory
   name: SLAVE_REPO_CONTEXTDIR
