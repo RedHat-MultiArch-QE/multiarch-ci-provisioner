@@ -21,20 +21,14 @@ node ('jenkins-slave') {
                     // Clone the provisioning setup
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                     
-                    // Copy artifacts from build 
+                    // Copy artifacts from build
                     step([$class: 'CopyArtifact', filter: 'inventories/cinch.inventory',
-                          fingerprintArtifacts: true,
-                          flatten             : true,
                           projectName         : 'provision-multiarch-slave',
                           selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
                     step([$class: 'CopyArtifact', filter: 'resources/cinch.output',
-                          fingerprintArtifacts: true,
-                          flatten             : true,
                           projectName         : 'provision-multiarch-slave',
                           selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    
-                    sh 'ls'
-                    
+                    }
                 }
             }
 
