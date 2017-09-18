@@ -6,29 +6,25 @@
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
-
-            stage('Trigger') {
-                // TODO Set triggers for Job Build
-            }
-
-            stage('Provision') {
-                // TODO build an executable environment
-                dir('ci-pipeline') {
+            stage('Setup') {
+                // TODO - set cinchpin configuration from parameters
+                 dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                }
+            }
+            
+            stage('Provision') {
+                dir('ci-pipeline') {
                     sh 'cinchpin up'
                 }
             }
 
-            stage('Output') {
+            stage('Archive') {
+                // TODO archive slave name in a slave.properties file
                 dir('ci-pipeline') {
-                    sh 'cat inventories/cinch.inventory'
-                    sh 'cat resources/cinch.output'
+                    archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
+                    archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
                 }
-            }
-
-            // TODO implement publishing process
-            stage('Notify') {
-                // TODO Kickoff Test
             }
         }
     }
