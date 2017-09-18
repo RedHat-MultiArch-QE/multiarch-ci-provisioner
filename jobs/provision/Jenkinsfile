@@ -15,6 +15,7 @@ node ('jenkins-slave') {
                 // TODO build an executable environment
                 dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                    sh 'ls'
                     sh 'linchpin up && cinch inventories/cinch.inventory'
                 }
             }
