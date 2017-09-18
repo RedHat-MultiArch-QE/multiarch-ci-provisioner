@@ -26,12 +26,12 @@ node ('jenkins-slave') {
                           fingerprintArtifacts: true,
                           flatten             : true,
                           projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: parameters.BUILD_NUMBER]])
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
                     step([$class: 'CopyArtifact', filter: 'resources/cinch.output',
                           fingerprintArtifacts: true,
                           flatten             : true,
                           projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: parameters.BUILD_NUMBER]])
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
                     
                     sh 'ls'
                     
