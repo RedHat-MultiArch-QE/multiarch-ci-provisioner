@@ -7,7 +7,7 @@ properties([
     parameters([
         string(
           name: 'BUILD_NUMBER',
-          description: 'Build number of the cinchpin run',
+          description: 'Build number of the provision-mutliarch-slave job.',
         )
       ])
   ])
