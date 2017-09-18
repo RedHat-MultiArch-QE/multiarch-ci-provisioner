@@ -28,7 +28,6 @@ node ('jenkins-slave') {
                     step([$class: 'CopyArtifact', filter: 'resources/cinch.output',
                           projectName         : 'provision-multiarch-slave',
                           selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    }
                 }
             }
 
