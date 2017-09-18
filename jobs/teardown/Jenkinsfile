@@ -3,19 +3,37 @@
  *
  * Jenkins Pipeline to build and manage Atomic OpenShift
  */
-
+properties([
+    parameters([
+        string(
+          name: 'BUILD_NUMBER',
+          description: 'Build number of the cinchpin run',
+        )
+      ])
+  ])
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
 
             // Prepare the cinch teardown inventory
             stage('Setup') {
-                // TODO build an executable environment
                 dir('ci-pipeline') {
+                    // Clone the provisioning setup
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                    
+                    // Copy artifacts from build 
+                    step([$class: 'CopyArtifact', filter: 'inventories/cinch.inventory',
+                          fingerprintArtifacts: true,
+                          flatten             : true,
+                          projectName         : 'provision-multiarch-slave',
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: parameters.BUILD_NUMBER]])
+                    step([$class: 'CopyArtifact', filter: 'resources/cinch.output',
+                          fingerprintArtifacts: true,
+                          flatten             : true,
+                          projectName         : 'provision-multiarch-slave',
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: parameters.BUILD_NUMBER]])
+                    
                 }
-
-                // Parse the $CI_MESSAGE
             }
 
             // Preform the actual teardown
@@ -23,11 +41,6 @@ node ('jenkins-slave') {
                 dir('ci-pipeline') {
                     sh 'cinchpin destroy'
                 }
-            }
-
-            // Notify calling test
-            stage('Notify') {
-                // TODO Kickoff Test
             }
         }
     }
