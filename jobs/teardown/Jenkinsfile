@@ -33,6 +33,8 @@ node ('jenkins-slave') {
                           projectName         : 'provision-multiarch-slave',
                           selector            : [$class     : 'SpecificBuildSelector', buildNumber: parameters.BUILD_NUMBER]])
                     
+                    sh 'ls'
+                    
                 }
             }
 
