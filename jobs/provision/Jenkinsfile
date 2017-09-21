@@ -3,6 +3,15 @@
  *
  * Jenkins Pipeline to provision bare metal slaves in beaker.
  */
+properties([
+  parameters([
+    choiceParam(
+      name: 'ARCH',
+      choices: "x86_64\nppc64le\naarch64\ns390x",
+      description: 'Architecture'
+    )
+  ])
+])
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
@@ -17,7 +26,7 @@ node ('jenkins-slave') {
                     def configMap = (Map) configFileYml.load('inventories/group_vars/all.yml')
                     jslaveName = 'jenkins-slave-' + ${env.BUILD_NUMBER} + '-' + params.ARCH
                     configMap.jslave_name = jslaveName
-                    configMap.jslave_label = configMap.jslave_name
+                    configMap.jslave_label = jslaveName
                                           
                     DumperOptions options = new DumperOptions()
                     options.setPrettyFlow(true)
