@@ -12,21 +12,21 @@ properties([
     )
   ])
 ])
+
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
             def jslaveName = 'jenkins-slave-' + env.BUILD_NUMBER + '-' + params.ARCH
+            environment {
+                JSLAVE_NAME = jslaveName
+                JSLAVE_LABEL = jslaveName
+            }
+          
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
                  dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                     sh 'kinit -k jpoulin@REDHAT.COM'
-                     
-                    def configMap = readYaml(file: 'inventories/group_vars/all.yml')
-                    configMap.jslave_name = jslaveName
-                    configMap.jslave_label = jslaveName
- 
-                    writeYaml(file: 'inventories/group_vars/all.yml', data: configMap)
                 }
             }
             
