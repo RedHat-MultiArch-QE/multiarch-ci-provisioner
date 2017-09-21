@@ -15,7 +15,7 @@ properties([
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
-            def jslaveName = 'jenkins-slave-' + ${env.BUILD_NUMBER} + '-' + params.ARCH
+            def jslaveName = 'jenkins-slave-' + env.BUILD_NUMBER + '-' + params.ARCH
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
                  dir('ci-pipeline') {
