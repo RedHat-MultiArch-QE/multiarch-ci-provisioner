@@ -26,7 +26,7 @@ node ('jenkins-slave') {
                     configMap.jslave_name = jslaveName
                     configMap.jslave_label = jslaveName
  
-                    writeYaml(file: 'inventories/group_vars/all.yml' data: configMap)
+                    writeYaml(file: 'inventories/group_vars/all.yml', data: configMap)
                 }
             }
             
