@@ -40,10 +40,7 @@ node ('jenkins-slave') {
                     archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
                     archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
                     
-                    Properties props = new Properties()
-                    File propsFile = new File('slave.properties')
-                    props.setProperty('name', jslaveName)
-                    props.store(propsFile.newWriter(), null)
+                    writeFile(file: 'slave.properties', text: "name:${jslaveName}")
                     archiveArtifacts artifacts: 'slave.properties', fingerprint: true
                 }
             }
