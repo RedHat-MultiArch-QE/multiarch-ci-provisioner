@@ -10,6 +10,7 @@ node ('jenkins-slave') {
                 // TODO - set cinchpin configuration from parameters
                  dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                    sh 'kinit -k jpoulin@REDHAT.COM'
                 }
             }
             
