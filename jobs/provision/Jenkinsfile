@@ -15,24 +15,18 @@ properties([
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
-            def jslaveName = null
+            def jslaveName = 'jenkins-slave-' + ${env.BUILD_NUMBER} + '-' + params.ARCH
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
                  dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                     sh 'kinit -k jpoulin@REDHAT.COM'
                      
-                    Yaml configFileYml = new Yaml()
-                    def configMap = (Map) configFileYml.load('inventories/group_vars/all.yml')
-                    jslaveName = 'jenkins-slave-' + ${env.BUILD_NUMBER} + '-' + params.ARCH
+                    def configMap = readYaml(file: 'inventories/group_vars/all.yml')
                     configMap.jslave_name = jslaveName
                     configMap.jslave_label = jslaveName
-                                          
-                    DumperOptions options = new DumperOptions()
-                    options.setPrettyFlow(true)
-                    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
-                    yaml = new Yaml(options)
-                    yaml.dump(configMap, new FileWriter('inventories/group_vars/all.yml'))
+ 
+                    writeYaml(file: 'inventories/group_vars/all.yml' data: configMap)
                 }
             }
             
