@@ -6,11 +6,24 @@
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
+            def jslaveName = null
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
                  dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                     sh 'kinit -k jpoulin@REDHAT.COM'
+                     
+                    Yaml configFileYml = new Yaml()
+                    def configMap = (Map) configFileYml.load('inventories/group_vars/all.yml')
+                    jslaveName = 'jenkins-slave-' + ${env.BUILD_NUMBER} + '-' + params.ARCH
+                    configMap.jslave_name = jslaveName
+                    configMap.jslave_label = configMap.jslave_name
+                                          
+                    DumperOptions options = new DumperOptions()
+                    options.setPrettyFlow(true)
+                    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)
+                    yaml = new Yaml(options)
+                    yaml.dump(configMap, new FileWriter('inventories/group_vars/all.yml'))
                 }
             }
             
@@ -25,6 +38,12 @@ node ('jenkins-slave') {
                 dir('ci-pipeline') {
                     archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
                     archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
+                    
+                    Properties props = new Properties()
+                    File propsFile = new File('slave.properties')
+                    props.setProperty('name', jslaveName)
+                    props.store(propsFile.newWriter(), null)
+                    archiveArtifacts artifacts: 'slave.properties', fingerprint: true
                 }
             }
         }
