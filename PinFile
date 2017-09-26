@@ -1,11 +1,10 @@
-#The following example illustrates the PinFile
-#
-#SYNTAX:
-#
-#target:
-#    topology: <string>
-#    inventory: <string>
-
 cinch:
   topology: cinch.yml
   layout: cinch.yml
+  hooks:
+    postup:
+      - type: ansible
+        name: init
+        context: True
+        actions:
+          - playbook: init.yml
