@@ -1,0 +1,16 @@
+---
+- hosts: jenkins-slave
+  tasks:
+    - lineinfile:
+        file: /etc/containers/registries.conf
+        line: 'insecure_registries:'
+
+    - lineinfile:
+        file: /etc/containers/registries.conf
+        line: '  - 172.30.0.0/16'
+
+
+    - name: install dependencies
+      yum: bc git make golang docker jq bind-utils
+
+    - service: name=docker state=started
