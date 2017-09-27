@@ -32,7 +32,7 @@ node ('jenkins-slave') {
             stage('Provision') {
                 dir('ci-pipeline') {
                   def slaveTarget = "jenkins-slave-${params.ARCH}"
-                  sh "linchpin up ${slaveTarget}"
+                  sh "linchpin -vvv up ${slaveTarget}"
                   sh "cinch inventories/${slaveTarget}.inventory"
                 }
             }
