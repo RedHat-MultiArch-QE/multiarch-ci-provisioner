@@ -1,28 +1,21 @@
 ---
 - hosts: jenkins_slave
   tasks:
-    - lineinfile:
-        file: /etc/containers/registries.conf
-        line: 'insecure_registries:'
-
-    - lineinfile:
-        file: /etc/containers/registries.conf
-        line: '  - 172.30.0.0/16'
 
     - name: Add EPEL repository
       yum_repository:
         name: epel
         description: EPEL YUM repo
-        baseurl: "https://download.fedoraproject.org/pub/epel/7/{{ lookup(env, ARCH) }}/"
+        baseurl: "https://download.fedoraproject.org/pub/epel/7/{{ lookup('env', 'ARCH') }}/"
 
     - name: Add RHEL NIGHTLY repository
       yum_repository:
         name: rhel-nightly
         description: RHEL NIGHTLY YUM repo
-        baseurl: "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup(env, ARCH) }}/os"
+        baseurl: "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-8.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os"
 
     - name: install dependencies
-      yum: pkg={{item}} state=installed
+      yum: pkg={{item}} state=installed disable_gpg_check=yes
       with_items:
       - bc
       - git
@@ -31,5 +24,13 @@
       - docker
       - jq
       - bind-utils
+
+    - lineinfile:
+        path: /etc/containers/registries.conf
+        line: 'insecure_registries:'
+
+    - lineinfile:
+        path: /etc/containers/registries.conf
+        line: '  - 172.30.0.0/16'
 
     - service: name=docker state=started
