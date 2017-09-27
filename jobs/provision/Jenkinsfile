@@ -31,7 +31,7 @@ node ('jenkins-slave') {
             
             stage('Provision') {
                 dir('ci-pipeline') {
-                    sh 'cinchpin up'
+                  sh "cinchpin up jenkins-slave-${params.ARCH}"
                 }
             }
 
