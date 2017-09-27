@@ -4,7 +4,7 @@ resource_groups:
   - resource_group_name: ppc64le
     resource_group_type: beaker
     job_group: multiarch-ci
-    whiteboard: Cinch Slave for testing Multi-Arch AOS
+    whiteboard: "ppc64le slave for multiarch testing"
     recipesets:
     - distro: "RHEL-7.4"
       arch: ppc64le 
