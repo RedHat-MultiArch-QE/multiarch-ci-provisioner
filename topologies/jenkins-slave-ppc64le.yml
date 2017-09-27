@@ -1,0 +1,16 @@
+---
+topology_name: jenkins-slave
+resource_groups:
+  - resource_group_name: ppc64le
+    resource_group_type: beaker
+    job_group: multiarch-ci
+    whiteboard: Cinch Slave for testing Multi-Arch AOS
+    recipesets:
+    - distro: "RHEL-7.4"
+      arch: ppc64le 
+      variant: Server
+      count: 1
+      hostrequires:
+      - tag: hostname
+        op: "="
+        value: "ibm-p8-storage-03.khw.lab.eng.bos.redhat.com"
