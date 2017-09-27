@@ -31,16 +31,18 @@ node ('jenkins-slave') {
             
             stage('Provision') {
                 dir('ci-pipeline') {
-                  sh "cinchpin up jenkins-slave-${params.ARCH}"
+                  def slaveTarget = "jenkins-slave-${params.ARCH}"
+                  sh "linchpin up ${slaveTarget}"
+                  sh "cinch inventories/${slaveTarget}.inventory"
                 }
             }
 
             stage('Archive') {
-                // TODO archive slave name in a slave.properties file
                 dir('ci-pipeline') {
                     archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
                     archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
-                    
+
+                    // Archive slave name in a slave.properties file
                     writeFile(file: 'slave.properties', text: "name:${jslaveName}")
                     archiveArtifacts artifacts: 'slave.properties', fingerprint: true
                 }
