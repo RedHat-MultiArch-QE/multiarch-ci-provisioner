@@ -23,29 +23,23 @@ node ('jenkins-slave') {
           
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
-                dir('ci-pipeline') {
-                    git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
-                    sh 'kinit -k jpoulin@REDHAT.COM'
-                }
+                git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                sh 'kinit -k jpoulin@REDHAT.COM'
             }
             
             stage('Provision') {
-                dir('ci-pipeline') {
-                  def slaveTarget = "jenkins-slave-${params.ARCH}"
-                  sh "linchpin -vvv --pinfile PinFile up ${slaveTarget}"
-                  sh "cinch inventories/${slaveTarget}.inventory"
-                }
+                def slaveTarget = "jenkins-slave-${params.ARCH}"
+                sh "linchpin -vvv --pinfile PinFile up ${slaveTarget}"
+                sh "cinch inventories/${slaveTarget}.inventory"
             }
 
             stage('Archive') {
-                dir('ci-pipeline') {
-                    archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
-                    archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
+                archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
+                archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
 
-                    // Archive slave name in a slave.properties file
-                    writeFile(file: 'slave.properties', text: "name:${jslaveName}")
-                    archiveArtifacts artifacts: 'slave.properties', fingerprint: true
-                }
+                // Archive slave name in a slave.properties file
+                writeFile(file: 'slave.properties', text: "name:${jslaveName}")
+                archiveArtifacts artifacts: 'slave.properties', fingerprint: true
             }
         }
     }
