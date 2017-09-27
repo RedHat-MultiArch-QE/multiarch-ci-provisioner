@@ -9,6 +9,17 @@
         file: /etc/containers/registries.conf
         line: '  - 172.30.0.0/16'
 
+    - name: Add EPEL repository
+      yum_repository:
+        name: epel
+        description: EPEL YUM repo
+        baseurl: "https://download.fedoraproject.org/pub/epel/7/{{ lookup(env, ARCH) }}/"
+
+    - name: Add RHEL NIGHTLY repository
+      yum_repository:
+        name: rhel-nightly
+        description: RHEL NIGHTLY YUM repo
+        baseurl: "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup(env, ARCH) }}/os"
 
     - name: install dependencies
       yum: pkg={{item}} state=installed
