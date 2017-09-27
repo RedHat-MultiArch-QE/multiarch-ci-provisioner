@@ -1,5 +1,5 @@
 ---
-- hosts: jenkins-slave
+- hosts: jenkins_slave
   tasks:
     - lineinfile:
         file: /etc/containers/registries.conf
@@ -11,6 +11,14 @@
 
 
     - name: install dependencies
-      yum: bc git make golang docker jq bind-utils
+      yum: pkg={{item}} state=installed
+      with_items:
+      - bc
+      - git
+      - make
+      - golang
+      - docker
+      - jq
+      - bind-utils
 
     - service: name=docker state=started
