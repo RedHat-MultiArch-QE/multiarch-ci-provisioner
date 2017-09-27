@@ -7,6 +7,6 @@ resource_groups:
     whiteboard: Cinch Slave for testing Multi-Arch AOS
     recipesets:
       - distro: "RHEL-7.4"
-        arch: "{{ lookup('env', 'ARCH') }}"
+        arch: $ARCH
         variant: Server
         count: 1
