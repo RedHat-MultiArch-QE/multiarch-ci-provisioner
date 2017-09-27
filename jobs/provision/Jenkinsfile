@@ -19,6 +19,7 @@ node ('jenkins-slave') {
             def jslaveName = 'jenkins-slave-' + env.BUILD_NUMBER + '-' + params.ARCH
             env.JSLAVE_NAME = jslaveName
             env.JSLAVE_LABEL = jslaveName
+            env.ARCH = params.ARCH
           
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
