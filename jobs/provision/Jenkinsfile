@@ -23,7 +23,7 @@ node ('jenkins-slave') {
           
             stage('Setup') {
                 // TODO - set cinchpin configuration from parameters
-                 dir('ci-pipeline') {
+                dir('ci-pipeline') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                     sh 'kinit -k jpoulin@REDHAT.COM'
                 }
@@ -31,6 +31,7 @@ node ('jenkins-slave') {
             
             stage('Provision') {
                 dir('ci-pipeline') {
+                  sh "ls"
                   def slaveTarget = "jenkins-slave-${params.ARCH}"
                   sh "linchpin -vvv up ${slaveTarget}"
                   sh "cinch inventories/${slaveTarget}.inventory"
