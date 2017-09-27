@@ -4,7 +4,7 @@ resource_groups:
   - resource_group_name: x86_64
     resource_group_type: beaker
     job_group: multiarch-ci
-    whiteboard: Cinch Slave for testing Multi-Arch AOS
+    whiteboard: "x86_64 slave for multiarch testing"
     recipesets:
     - distro: "RHEL-7.4"
       arch: x86_64
