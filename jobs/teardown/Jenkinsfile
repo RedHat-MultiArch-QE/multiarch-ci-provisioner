@@ -22,10 +22,10 @@ node ('jenkins-slave') {
                     git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                     
                     // Copy artifacts from build
-                    step([$class: 'CopyArtifact', filter: 'inventories/cinch.inventory',
+                    step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
                           projectName         : 'provision-multiarch-slave',
                           selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    step([$class: 'CopyArtifact', filter: 'resources/cinch.output',
+                    step([$class: 'CopyArtifact', filter: 'resources/*.output',
                           projectName         : 'provision-multiarch-slave',
                           selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
                     
