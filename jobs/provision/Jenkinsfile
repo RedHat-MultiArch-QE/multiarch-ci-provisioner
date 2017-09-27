@@ -34,8 +34,8 @@ node ('jenkins-slave') {
             }
 
             stage('Archive') {
-                archiveArtifacts artifacts: 'inventories/cinch.inventory', fingerprint: true
-                archiveArtifacts artifacts: 'resources/cinch.output', fingerprint: true
+                archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
+                archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
 
                 // Archive slave name in a slave.properties file
                 writeFile(file: 'slave.properties', text: "name:${jslaveName}")
