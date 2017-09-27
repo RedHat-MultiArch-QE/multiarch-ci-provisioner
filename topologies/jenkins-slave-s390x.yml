@@ -1,0 +1,12 @@
+---
+topology_name: jenkins-slave-s390x
+resource_groups:
+  - resource_group_name: s390x
+    resource_group_type: beaker
+    job_group: multiarch-ci
+    whiteboard: "s390x slave for multiarch testing"
+    recipesets:
+    - distro: "RHEL-7.4"
+      arch: s390x
+      variant: Server
+      count: 1
