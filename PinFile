@@ -1,39 +1,15 @@
 jenkins-slave-aarch64:
   topology: jenkins-slave-aarch64.yml
   layout: jenkins-slave.yml
-  hooks:
-    postup:
-      - type: ansible
-        name: init
-        actions:
-          - playbook: init.yml
 
 jenkins-slave-ppc64le:
   topology: jenkins-slave-ppc64le.yml
   layout: jenkins-slave.yml
-  hooks:
-    postup:
-      - type: ansible
-        name: init
-        actions:
-          - playbook: init.yml
 
 jenkins-slave-s390x:
   topology: jenkins-slave-s390x.yml
   layout: jenkins-slave.yml
-  hooks:
-    postup:
-      - type: ansible
-        name: init
-        actions:
-          - playbook: init.yml
 
 jenkins-slave-x86_64:
   topology: jenkins-slave-x86_64.yml
   layout: jenkins-slave.yml
-  hooks:
-    postup:
-      - type: ansible
-        name: init
-        actions:
-          - playbook: init.yml
