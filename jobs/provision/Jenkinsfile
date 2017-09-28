@@ -29,8 +29,8 @@ node ('jenkins-slave') {
             
             stage('Provision') {
                 def slaveTarget = "jenkins-slave-${params.ARCH}"
-                sh "linchpin -vvv --pinfile PinFile up ${slaveTarget}"
-		sh "ansible-playbook -i inventories/${slaveTarget}.inventory hooks/ansible/init/init.yml"
+                sh "linchpin -vvvv --pinfile PinFile up ${slaveTarget}"
+		//sh "ansible-playbook -i inventories/${slaveTarget}.inventory hooks/ansible/init/init.yml"
                 sh "cinch inventories/${slaveTarget}.inventory"
             }
 
