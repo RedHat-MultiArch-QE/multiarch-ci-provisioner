@@ -25,6 +25,8 @@ node ('jenkins-slave') {
                 // TODO - set cinchpin configuration from parameters
                 git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
                 sh 'kinit -k jpoulin'
+		sh 'echo $HOME'
+		sh 'ls -a ~'
             }
             
             stage('Provision') {
