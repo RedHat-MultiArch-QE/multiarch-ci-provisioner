@@ -6,8 +6,8 @@ jenkins-slave-aarch64:
       - type: ansible
         name: init
         actions:
-        - playbook: init.yml
-        extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
+          - playbook: init.yml
+            extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
 
 jenkins-slave-ppc64le:
   topology: jenkins-slave-ppc64le.yml
@@ -17,8 +17,8 @@ jenkins-slave-ppc64le:
       - type: ansible
         name: init
         actions:
-        - playbook: init.yml
-        extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
+          - playbook: init.yml
+            extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
 
 jenkins-slave-s390x:
   topology: jenkins-slave-s390x.yml
@@ -28,8 +28,8 @@ jenkins-slave-s390x:
       - type: ansible
         name: init
         actions:
-        - playbook: init.yml
-        extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
+          - playbook: init.yml
+            extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
 
 jenkins-slave-x86_64:
   topology: jenkins-slave-x86_64.yml
@@ -39,5 +39,5 @@ jenkins-slave-x86_64:
       - type: ansible
         name: init
         actions:
-        - playbook: init.yml
-        extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
+          - playbook: init.yml
+            extra_vars: {"ansible_ssh_private_key_file": "~/.ssh/id_rsa"}
