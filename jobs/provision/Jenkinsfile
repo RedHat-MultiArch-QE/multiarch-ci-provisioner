@@ -35,7 +35,8 @@ node ('jenkins-slave') {
 		    sh "linchpin -vvvv --pinfile PinFile up ${slaveTarget}"
 		    sh "cinch inventories/${slaveTarget}.inventory"
 	        }
-	    } catch (e) {    
+	    } catch (e) {
+                currentBuild.result = 'FAILURE'
 	    } finally {    
                 stage('Archive') {
                     archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
