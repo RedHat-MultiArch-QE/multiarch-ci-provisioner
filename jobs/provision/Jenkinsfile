@@ -29,21 +29,23 @@ node ('jenkins-slave') {
 		sh 'ls -a ~'
             }
             
-            stage('Provision') {
-                def slaveTarget = "jenkins-slave-${params.ARCH}"
-                sh "linchpin -vvvv --pinfile PinFile up ${slaveTarget}"
-		//sh "ansible-playbook -i inventories/${slaveTarget}.inventory hooks/ansible/init/init.yml"
-                sh "cinch inventories/${slaveTarget}.inventory"
-            }
+	    try {
+	        stage('Provision') {
+		    def slaveTarget = "jenkins-slave-${params.ARCH}"
+		    sh "linchpin -vvvv --pinfile PinFile up ${slaveTarget}"
+		    sh "cinch inventories/${slaveTarget}.inventory"
+	        }
+	    } catch (e) {    
+	    } finally {    
+                stage('Archive') {
+                    archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
+                    archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
 
-            stage('Archive') {
-                archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
-                archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
-
-                // Archive slave name in a slave.properties file
-                writeFile(file: 'slave.properties', text: "name:${jslaveName}")
-                archiveArtifacts artifacts: 'slave.properties', fingerprint: true
-            }
-        }
+                    // Archive slave name in a slave.properties file
+                    writeFile(file: 'slave.properties', text: "name:${jslaveName}")
+                    archiveArtifacts artifacts: 'slave.properties', fingerprint: true
+		}
+	    }
+	}
     }
 }
