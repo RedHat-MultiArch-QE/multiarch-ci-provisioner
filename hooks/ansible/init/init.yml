@@ -12,7 +12,7 @@
       yum_repository:
         name: rhel-nightly
         description: RHEL NIGHTLY YUM repo
-        baseurl: "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-8.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os"
+        baseurl: "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os"
 
     - name: install dependencies
       yum: pkg={{item}} state=installed disable_gpg_check=yes
