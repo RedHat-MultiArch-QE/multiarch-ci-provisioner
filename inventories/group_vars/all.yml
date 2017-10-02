@@ -16,7 +16,3 @@ jslave_label: "{{ lookup('env', 'JSLAVE_LABEL') }}"
 # Jenkins Slave Registration Credentials
 jenkins_slave_username: "{{ lookup('env', 'JENKINS_SLAVE_USERNAME') }}"
 jenkins_slave_password: "{{ lookup('env', 'JENKINS_SLAVE_PASSWORD') }}"
-
-rpm_key_imports: []
-jenkins_master_repositories: []
-jenkins_master_download_repositories: []
