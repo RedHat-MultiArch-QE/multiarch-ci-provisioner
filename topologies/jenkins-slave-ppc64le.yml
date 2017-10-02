@@ -6,7 +6,7 @@ resource_groups:
     job_group: multiarch-ci
     whiteboard: "ppc64le slave for multiarch testing"
     recipesets:
-    - distro: "RHEL-7.3"
+    - distro: "RHEL-7.4"
       arch: ppc64le 
       variant: Server
       count: 1
