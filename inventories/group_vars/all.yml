@@ -6,7 +6,7 @@ certificate_authority_urls:
   - https://password.corp.redhat.com/RH-IT-Root-CA.crt
   - https://engineering.redhat.com/Eng-CA.crt
 #rhel_base: http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/power-le/7/7Server
-rhel_base: "http://download.eng.bos.redhat.com/released/RHEL-7/7.4/Server/{{ lookup('env', 'ARCH') }}/os/"
+rhel_base: "http://download.eng.bos.redhat.com/released/RHEL-7/7.3/Server/{{ lookup('env', 'ARCH') }}/os/"
 
 # URL to Jenkins master for the slave to connect to
 jenkins_master_url: 'https://multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
