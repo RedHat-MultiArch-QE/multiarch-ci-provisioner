@@ -14,7 +14,7 @@ properties([
 node ('jenkins-slave') {
     ansiColor('xterm') {
         timestamps {
-            def provisionedNode = null
+            def target = null
 
             // Prepare the cinch teardown inventory
             stage('Setup') {
@@ -42,13 +42,13 @@ node ('jenkins-slave') {
                 def slaveProps = readProperties file: 'slave.properties'
 
                 // Retrieve the appropriate slave name
-                provisionedNode = slaveProps.name
+                target = slaveProps.target
             }
 
             // Preform the actual teardown
             stage('Teardown') {
-                sh "ansible-playbook -i inventories/${provisionedNode}.inventory cinch/cinch/teardown.yml"
-                sh "linchpin destroy ${provisionedNode}"
+                sh "ansible-playbook -i inventories/${target}.inventory cinch/cinch/teardown.yml"
+                sh "linchpin destroy ${target}"
             }
         }
     }
