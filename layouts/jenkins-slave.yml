@@ -1,7 +1,7 @@
 ---
 inventory_layout:
   hosts:
-    jenkins-slave-group:
+    jenkins-slave:
       count: 1
       host_groups:
         - rhel7
