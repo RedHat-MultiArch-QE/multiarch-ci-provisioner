@@ -20,39 +20,35 @@ node ('jenkins-slave') {
             stage('Setup') {
                 sh 'kinit -k jpoulin'
 
-                dir('multiarch-ci-pipeline') {
-                    // Clone the provisioning setup
-                    git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
-                    
-                    dir('cinch') {
-                        git 'https://github.com/RedHatQE/cinch'
-                    }
-                    
-                    // Copy artifacts from build
-                    step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
-                          projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    step([$class: 'CopyArtifact', filter: 'resources/*.output',
-                          projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    step([$class: 'CopyArtifact', filter: 'slave.properties',
-                          projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-
-                    // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
-                    def slaveProps = readProperties file: 'slave.properties'
-
-                    // Retrieve the appropriate slave name
-                    provisionedNode = slaveProps.name
+                // Clone the provisioning setup
+                git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+                
+                dir('cinch') {
+                    git 'https://github.com/RedHatQE/cinch'
                 }
+                   
+                // Copy artifacts from build
+                step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
+                      projectName         : 'provision-multiarch-slave',
+                      selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+                step([$class: 'CopyArtifact', filter: 'resources/*.output',
+                      projectName         : 'provision-multiarch-slave',
+                      selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+                step([$class: 'CopyArtifact', filter: 'slave.properties',
+                      projectName         : 'provision-multiarch-slave',
+                      selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+
+                // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
+                def slaveProps = readProperties file: 'slave.properties'
+
+                // Retrieve the appropriate slave name
+                provisionedNode = slaveProps.name
             }
 
             // Preform the actual teardown
             stage('Teardown') {
-                dir('multiarch-ci-pipeline') {
-                    sh "ansible-playbook -i inventories/${provisionedNode}.inventory cinch/cinch/teardown.yml"
-                    sh "linchpin --pinfile ./PinFile destroy ${provisionedNode}"
-                }
+                sh "ansible-playbook -i inventories/${provisionedNode}.inventory cinch/cinch/teardown.yml"
+                sh "linchpin destroy ${provisionedNode}"
             }
         }
     }
