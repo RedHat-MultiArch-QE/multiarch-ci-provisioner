@@ -32,7 +32,7 @@ node ('jenkins-slave') {
 	    try {
 	        stage('Provision') {
 		    def slaveTarget = "jenkins-slave-${params.ARCH}"
-		    sh "linchpin -vvvv --pinfile PinFile up ${slaveTarget}"
+		    sh "linchpin -vvvv up ${slaveTarget}"
 		    sh "cinch inventories/${slaveTarget}.inventory"
 	        }
 	    } catch (e) {
