@@ -34,7 +34,7 @@ node ('jenkins-slave') {
 	        stage('Provision') {
 		    slaveTarget = "jenkins-slave-${params.ARCH}"
 		    sh "linchpin -vvvv up ${slaveTarget}"
-		    sh "cinch inventories/${slaveTarget}.inventory"
+		    sh "cinch inventories/${slaveTarget}.inventory rpm_key_imports=[] jenkins_master_repositories=[] jenkins_master_download_repositories=[]"
 	        }
 	    } catch (e) {
                 currentBuild.result = 'FAILURE'
