@@ -51,7 +51,7 @@ node ('jenkins-slave') {
             stage('Teardown') {
                 dir('multiarch-ci-pipeline') {
                     sh "ansible-playbook -i inventories/${provisionedNode}.inventory cinch/cinch/teardown.yml"
-                    sh "linchpin destroy ${provisionedNode}"
+                    sh "linchpin --pinfile PinFile destroy ${provisionedNode}"
                 }
             }
         }
