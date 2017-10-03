@@ -36,7 +36,8 @@ node ('jenkins-slave') {
             // Preform the actual teardown
             stage('Teardown') {
                 dir('ci-pipeline') {
-                    sh 'cinchpin destroy'
+                    sh 'cinch destroy inventories/*.inventory'
+                    sh 'linchpin destroy'
                 }
             }
         }
