@@ -1,7 +1,7 @@
 ansible_user: root
 ansible_private_key_file: ~/.ssh/id_rsa
 ansible_connection: ssh
-certificate_authority_urls:   
+certificate_authority_urls:
   - https://password.corp.redhat.com/legacy.crt
   - https://password.corp.redhat.com/RH-IT-Root-CA.crt
   - https://engineering.redhat.com/Eng-CA.crt
@@ -16,3 +16,8 @@ jslave_label: "{{ lookup('env', 'JSLAVE_LABEL') }}"
 # Jenkins Slave Registration Credentials
 jenkins_slave_username: "{{ lookup('env', 'JENKINS_SLAVE_USERNAME') }}"
 jenkins_slave_password: "{{ lookup('env', 'JENKINS_SLAVE_PASSWORD') }}"
+
+# Variable overrides
+rpm_key_imports: []
+jenkins_master_repositories: []
+jenkins_master_download_repositories: []
