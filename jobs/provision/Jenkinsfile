@@ -29,9 +29,10 @@ node ('jenkins-slave') {
 		sh 'ls -a ~'
             }
             
+	    def slaveTarget = null
 	    try {
 	        stage('Provision') {
-		    def slaveTarget = "jenkins-slave-${params.ARCH}"
+		    slaveTarget = "jenkins-slave-${params.ARCH}"
 		    sh "linchpin -vvvv up ${slaveTarget}"
 		    sh "cinch inventories/${slaveTarget}.inventory"
 	        }
@@ -43,7 +44,7 @@ node ('jenkins-slave') {
                     archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
 
                     // Archive slave name in a slave.properties file
-                    writeFile(file: 'slave.properties', text: "name:${jslaveName}")
+		    writeFile(file: 'slave.properties', text: "name:${jslaveName}\ntarget:${slaveTarget}")
                     archiveArtifacts artifacts: 'slave.properties', fingerprint: true
 		}
 	    }
