@@ -26,7 +26,7 @@ node ('jenkins-slave') {
 		sh 'kinit -k jpoulin'
 		    
                 // Get linchpin topology
-                git 'https://github.com/jaypoulz/multiarch-ci-pipeline
+                git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
 		    
 		// Download slave playbooks
 		dir('cinch') {
