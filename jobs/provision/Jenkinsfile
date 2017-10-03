@@ -22,11 +22,16 @@ node ('jenkins-slave') {
             env.ARCH = params.ARCH
           
             stage('Setup') {
-                // TODO - set cinchpin configuration from parameters
-                git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
-                sh 'kinit -k jpoulin'
-		sh 'echo $HOME'
-		sh 'ls -a ~'
+		// Ensure kerberos ticket is fresh
+		sh 'kinit -k jpoulin'
+		    
+                // Get linchpin topology
+                git 'https://github.com/jaypoulz/multiarch-ci-pipeline
+		    
+		// Download slave playbooks
+		dir('cinch') {
+                    git 'https://github.com/RedHatQE/cinch'
+                }
             }
             
 	    def slaveTarget = null
@@ -34,12 +39,13 @@ node ('jenkins-slave') {
 	        stage('Provision') {
 		    slaveTarget = "jenkins-slave-${params.ARCH}"
 		    sh "linchpin -vvvv up ${slaveTarget}"
-		    sh "cinch inventories/${slaveTarget}.inventory rpm_key_imports=[] jenkins_master_repositories=[] jenkins_master_download_repositories=[]"
+		    sh "cinch inventories/${slaveTarget}.inventory cinch/cinch/site.yml rpm_key_imports=[] jenkins_master_repositories=[] jenkins_master_download_repositories=[]"
 	        }
 	    } catch (e) {
                 currentBuild.result = 'FAILURE'
 	    } finally {    
                 stage('Archive') {
+                    // Archive linchpin output
                     archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
                     archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
 
