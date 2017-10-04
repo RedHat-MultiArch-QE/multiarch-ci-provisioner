@@ -48,7 +48,7 @@ node ('jenkins-slave') {
             // Preform the actual teardown
             stage('Teardown') {
                 try {
-                    sh "ansible-playbook --inventory-file inventories/${target}.inventory cinch/cinch/teardown.yml"
+                    sh "ansible-playbook --inventory inventories/${target}.inventory cinch/cinch/teardown.yml"
                 } catch (e) {
                     println e
                 }
