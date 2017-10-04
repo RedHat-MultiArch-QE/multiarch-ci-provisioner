@@ -40,7 +40,7 @@ node ('jenkins-slave') {
 		    slaveTarget = "jenkins-slave-${params.ARCH}"
 		    sh "linchpin -vvvv up ${slaveTarget}"
 		    sh """
-		    ansible-playbook --inventory-file inventories/${slaveTarget}.inventory \
+		    ansible-playbook --inventory inventories/${slaveTarget}.inventory \
 		        --extra-vars='{ "rpm_key_imports"=[], "jenkins_master_repositories"=[], "jenkins_master_download_repositories"=[]"}' \
 			cinch/cinch/site.yml
 		    """
