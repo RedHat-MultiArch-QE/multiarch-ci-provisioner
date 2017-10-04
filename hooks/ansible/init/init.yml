@@ -13,6 +13,9 @@
         name: rhel-nightly
         description: RHEL NIGHTLY YUM repo
         baseurl: "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os"
+        gpgkey:
+          - "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os/RPM-GPG-KEY-redhat-beta"
+          - "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os/RPM-GPG-KEY-redhat-release"
 
     - name: install dependencies
       yum: pkg={{item}} state=installed disable_gpg_check=yes
