@@ -41,7 +41,7 @@ node ('jenkins-slave') {
 		    sh "linchpin -vvvv up ${slaveTarget}"
 		    sh """
 		    ansible-playbook --inventory inventories/${slaveTarget}.inventory \
-		        --extra-vars='{ "rpm_key_imports"=[], "jenkins_master_repositories"=[], "jenkins_master_download_repositories"=[] }' \
+		        --extra-vars "rpm_key_imports=[] jenkins_master_repositories=[] jenkins_master_download_repositories=[]" \
 			cinch/cinch/site.yml
 		    """
 	        }
