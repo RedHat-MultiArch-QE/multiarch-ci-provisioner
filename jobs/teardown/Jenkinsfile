@@ -26,17 +26,23 @@ node ('jenkins-slave') {
                 dir('cinch') {
                     git 'https://github.com/RedHatQE/cinch'
                 }
-                   
-                // Copy artifacts from build
-                step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
-                      projectName         : 'provision-multiarch-slave',
-                      selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                step([$class: 'CopyArtifact', filter: 'resources/*.output',
-                      projectName         : 'provision-multiarch-slave',
-                      selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                step([$class: 'CopyArtifact', filter: 'slave.properties',
-                      projectName         : 'provision-multiarch-slave',
-                      selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+                
+                try {
+                    // Copy artifacts from build
+                    step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
+                          projectName         : 'provision-multiarch-slave',
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+                    step([$class: 'CopyArtifact', filter: 'resources/*.output',
+                          projectName         : 'provision-multiarch-slave',
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+                    step([$class: 'CopyArtifact', filter: 'slave.properties',
+                          projectName         : 'provision-multiarch-slave',
+                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+                } catch (e) {
+                    // The provisioning job did not successfully provision a machine, so there is nothing to teardown
+                    currentBuild.result = 'SUCCESS'
+                    return
+                }
 
                 // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
                 def slaveProps = readProperties file: 'slave.properties'
