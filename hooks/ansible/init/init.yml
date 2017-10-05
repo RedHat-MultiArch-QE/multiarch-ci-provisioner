@@ -17,7 +17,7 @@
           - "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os/RPM-GPG-KEY-redhat-beta"
           - "http://download.eng.bos.redhat.com/composes/nightly/EXTRAS-RHEL-7.4/latest-EXTRAS-7-RHEL-7/compose/Server/{{ lookup('env', 'ARCH') }}/os/RPM-GPG-KEY-redhat-release"
 
-    - name: install dependencies
+    - name: Install dependencies
       yum: pkg={{item}} state=installed disable_gpg_check=yes
       with_items:
       - bc
@@ -27,6 +27,17 @@
       - docker
       - jq
       - bind-utils
+
+    - name: Adding docker group to system
+      group:
+        name: docker
+        state: present
+        system: yes
+
+    - name: Adding existing user jenkins to group docker
+      user: name=jenkins
+            groups=docker
+            append=yes 
 
     - lineinfile:
         path: /etc/containers/registries.conf
