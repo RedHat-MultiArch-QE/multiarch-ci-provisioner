@@ -2,6 +2,6 @@
 #
 # Use this file to setup the OpenShift provisioner in a dedicated VM.
 #
-bash setup/install.sh
-bash setup/clusterup.sh
-bash setup/init.sh
+. setup/install.sh
+. setup/clusterup.sh
+. setup/init.sh
