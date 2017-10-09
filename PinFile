@@ -1,5 +1,5 @@
-jenkins-slave-aarch64:
-  topology: jenkins-slave-aarch64.yml
+aarch64-slave:
+  topology: aarch64-slave.yml
   layout: jenkins-slave.yml
   hooks:
     postup:
@@ -9,8 +9,8 @@ jenkins-slave-aarch64:
           - playbook: init.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
 
-jenkins-slave-ppc64le:
-  topology: jenkins-slave-ppc64le.yml
+ppc64le-slave:
+  topology: ppc64le-slave.yml
   layout: jenkins-slave.yml
   hooks:
     postup:
@@ -20,8 +20,8 @@ jenkins-slave-ppc64le:
           - playbook: init.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
 
-jenkins-slave-s390x:
-  topology: jenkins-slave-s390x.yml
+s390x-slave:
+  topology: s390x-slave.yml
   layout: jenkins-slave.yml
   hooks:
     postup:
@@ -31,8 +31,8 @@ jenkins-slave-s390x:
           - playbook: init.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
 
-jenkins-slave-x86_64:
-  topology: jenkins-slave-x86_64.yml
+x86_64-slave:
+  topology: x86_64-slave.yml
   layout: jenkins-slave.yml
   hooks:
     postup:

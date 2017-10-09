@@ -16,7 +16,7 @@ properties([
 node ('provisioner') {
     ansiColor('xterm') {
         timestamps {
-            def jslaveName = 'jenkins-slave-' + env.BUILD_NUMBER + '-' + params.ARCH
+            def jslaveName = params.ARCH + '-slave-' + env.BUILD_NUMBER 
             env.JSLAVE_NAME = jslaveName
             env.JSLAVE_LABEL = jslaveName
             env.ARCH = params.ARCH
@@ -37,7 +37,7 @@ node ('provisioner') {
 	    def slaveTarget = null
 	    try {
 	        stage('Provision') {
-		    slaveTarget = "jenkins-slave-${params.ARCH}"
+		    slaveTarget = "${params.ARCH}-slave"
 		    sh "linchpin -vvvv up ${slaveTarget}"
 		    sh """
 		    ansible-playbook --inventory inventories/${slaveTarget}.inventory \
