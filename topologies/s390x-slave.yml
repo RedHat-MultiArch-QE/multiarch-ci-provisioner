@@ -1,5 +1,5 @@
 ---
-topology_name: jenkins-slave-s390x
+topology_name: s390x-slave
 resource_groups:
   - resource_group_name: s390x
     resource_group_type: beaker

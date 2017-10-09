@@ -1,12 +1,12 @@
 ---
-topology_name: jenkins-slave-aarch64
+topology_name: x86_64-slave
 resource_groups:
-  - resource_group_name: aarch64
+  - resource_group_name: x86_64
     resource_group_type: beaker
     job_group: multiarch-ci
-    whiteboard: "aarch64 slave for multiarch testing"
+    whiteboard: "x86_64 slave for multiarch testing"
     recipesets:
     - distro: "RHEL-7.4"
-      arch: aarch64
+      arch: x86_64
       variant: Server
       count: 1
