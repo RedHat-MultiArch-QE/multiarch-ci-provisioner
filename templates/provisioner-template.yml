@@ -1,33 +1,33 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: jenkins-slave-builder
+  template: provisioner-builder
 metadata:
   annotations:
-    description: Jenkins slave capable of running multiarch AOS tests
+    description: Provisioner capable of setting up multi-arch jenkins slaves
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: jenkins-slave-builder
+  name: provisioner-builder
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
-      slave-label: jenkins-slave
+      slave-label: provisioner
     labels:
-      role: jenkins-slave
-    name: jenkins-slave
-    namespace: multiarch-slave-provisioner
+      role: provisioner
+    name: provisioner
+    namespace: provisioner
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: jenkins-slave
+    name: provisioner
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: jenkins-slave:latest
+        name: provisioner:latest
     resources: {}
     source:
       contextDir: ${SLAVE_REPO_CONTEXTDIR}
@@ -50,7 +50,7 @@ parameters:
 - description: The sub-directory inside the repository.
   displayName: Context Directory
   name: SLAVE_REPO_CONTEXTDIR
-  value: images/jenkins-slave
+  value: images/provisioner
 - description: The git ref or tag to use for customization.
   displayName: Git Reference
   name: SLAVE_REPO_REF

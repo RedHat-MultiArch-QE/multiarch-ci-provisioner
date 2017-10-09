@@ -1,9 +1,9 @@
 kind: BuildConfig
 apiVersion: v1
 metadata:
-  name: provision-multiarch-slave
+  name: teardown-multiarch-slave
   labels:
-    name: provision-multiarch-slave
+    name: teardown-multiarch-slave
 spec:
   source:
     type: Git
@@ -12,4 +12,4 @@ spec:
   strategy:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
-      jenkinsfilePath: jobs/provision/Jenkinsfile
+      jenkinsfilePath: jobs/teardown/Jenkinsfile

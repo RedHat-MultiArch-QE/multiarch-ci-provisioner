@@ -11,7 +11,7 @@ properties([
         )
       ])
   ])
-node ('jenkins-slave') {
+node ('provisioner') {
     ansiColor('xterm') {
         timestamps {
             def target = null
