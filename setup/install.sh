@@ -24,6 +24,7 @@ sudo firewall-cmd --permanent --zone dockerc --add-port 50000/tcp;
 sudo firewall-cmd --reload;
 
 # Allow sudoless docker
-sudo groupadd docker
+echo "Creating docker group"
+sudo getent group docker &>/dev/null || sudo groupadd docker
+echo "Adding user to docker group"
 sudo usermod -aG docker $USER
-newgrp docker

@@ -8,3 +8,4 @@ sudo iptables -F;
 sudo service docker restart;
 oc cluster up --public-hostname=$ip_address --routing-suffix=$route_address;
 
+exit 0

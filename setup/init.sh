@@ -9,3 +9,5 @@ oc new-app provisioner-builder
 oc login -u system:admin
 oc adm policy add-scc-to-user privileged developer
 oc login -u developer
+
+exit 0
