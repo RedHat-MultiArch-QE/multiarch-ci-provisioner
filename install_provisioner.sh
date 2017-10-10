@@ -5,12 +5,6 @@
 # Setup dependencies and docker
 bash setup/install.sh
 
-# Docker group should now be installed
-group=docker
-if [ $(id -gn) != $group ]; then
-  exec sg $group "$0 $*"
-fi
-
 # Launch OpenShift cluster
 bash setup/clusterup.sh
 
