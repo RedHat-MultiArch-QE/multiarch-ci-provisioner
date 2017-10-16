@@ -45,10 +45,10 @@ node ('provisioner') {
 
         if (params.CONFIG_REPO && params.CONFIG_FILE) {
           // Copy configuration playbook into post up hook.
-          dir('config') {
+          dir('config-repo') {
             git params.CONFIG_REPO
           }
-          sh "cp config/${CONFIG_FILE} /hooks/ansible/config/config.yml"
+          sh "cp config-repo/${CONFIG_FILE} hooks/ansible/config/config.yml"
         } else if (params.CONFIG_REPO && !params.CONFIG_FILE || !params.CONFIG_REPO && params.CONFIG_FILE) {
           println 'WARNING: params.CONFIG_REPO and params.CONFIG_FILE must be set together or both will be ignored.'
         }
