@@ -4,60 +4,80 @@
  * Jenkins Pipeline to provision bare metal slaves in beaker.
  */
 properties([
-  parameters([
-    choiceParam(
-      name: 'ARCH',
-      choices: "x86_64\nppc64le\naarch64\ns390x",
-      description: 'Architecture'
-    )
+    parameters([
+        choiceParam(
+          name: 'ARCH',
+          choices: "x86_64\nppc64le\naarch64\ns390x",
+          description: 'Architecture'
+        ),
+        string(
+          name: 'CONFIG_REPO',
+          description: 'Optional repo containing an Ansible playbook to run on the provisioned host.',
+          defaultValue: ''
+        ),
+        string(
+          name: 'CONFIG_FILE',
+          description: 'Path to file in CONFIG_REPO to specify an Ansible playbook to run on the provisioned host.',
+          defaultValue: ''
+        )
+      ])
   ])
-])
 
 node ('provisioner') {
-    ansiColor('xterm') {
-        timestamps {
-            def jslaveName = params.ARCH + '-slave-' + env.BUILD_NUMBER 
-            env.JSLAVE_NAME = jslaveName
-            env.JSLAVE_LABEL = jslaveName
-            env.ARCH = params.ARCH
-          
-            stage('Setup') {
-		// Ensure kerberos ticket is fresh
-		sh 'kinit -k jpoulin'
-		    
-                // Get linchpin topology
-                git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
-		    
-		// Download slave playbooks
-		dir('cinch') {
-                    git 'https://github.com/RedHatQE/cinch'
-                }
-            }
-            
-	    def slaveTarget = null
-	    try {
-	        stage('Provision') {
-		    slaveTarget = "${params.ARCH}-slave"
-		    sh "linchpin -vvvv up ${slaveTarget}"
-		    sh """
-		    ansible-playbook --inventory inventories/${slaveTarget}.inventory \
-		        --extra-vars '{ "rpm_key_imports":[], "jenkins_master_repositories":[], "jenkins_master_download_repositories":[] }' \
-			cinch/cinch/site.yml
-		    """
-	        }
-	    } catch (e) {
-                currentBuild.result = 'FAILURE'
-	    } finally {    
-                stage('Archive') {
-                    // Archive linchpin output
-                    archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
-                    archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
+  ansiColor('xterm') {
+    timestamps {
+      def jslaveName = params.ARCH + '-slave-' + env.BUILD_NUMBER
+      env.JSLAVE_NAME = jslaveName
+      env.JSLAVE_LABEL = jslaveName
+      env.ARCH = params.ARCH
 
-                    // Archive slave name in a slave.properties file
-		    writeFile(file: 'slave.properties', text: "name:${jslaveName}\ntarget:${slaveTarget}")
-                    archiveArtifacts artifacts: 'slave.properties', fingerprint: true
-		}
-	    }
-	}
+      stage('Setup') {
+        // Ensure kerberos ticket is fresh
+        sh 'kinit -k jpoulin'
+
+        // Get linchpin topology
+        git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
+
+        // Download slave playbooks
+        dir('cinch') {
+          git 'https://github.com/RedHatQE/cinch'
+        }
+
+        if (params.CONFIG_REPO && params.CONFIG_FILE) {
+          // Copy configuration playbook into post up hook.
+          dir(params.CONFIG_REPO) {
+            git params.CONFIG_REPO
+            sh "cp ${CONFIG_FILE} ~/hooks/ansible/config/config.yml"
+          }
+        } else if (params.CONFIG_REPO && !params.CONFIG_FILE || !params.CONFIG_REPO && params.CONFIG_FILE) {
+          println 'WARNING: params.CONFIG_REPO and params.CONFIG_FILE must be set together or both will be ignored.'
+        }
+      }
+
+      def slaveTarget = null
+      try {
+        stage('Provision') {
+          slaveTarget = "${params.ARCH}-slave"
+          sh "linchpin -vvvv up ${slaveTarget}"
+          sh """
+            ansible-playbook --inventory inventories/${slaveTarget}.inventory \
+            --extra-vars '{ "rpm_key_imports":[], "jenkins_master_repositories":[], "jenkins_master_download_repositories":[] }' \
+            cinch/cinch/site.yml
+          """
+        }
+      } catch (e) {
+        currentBuild.result = 'FAILURE'
+      } finally {
+        stage('Archive') {
+          // Archive linchpin output
+          archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
+          archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
+
+          // Archive slave name in a slave.properties file
+          writeFile(file: 'slave.properties', text: "name:${jslaveName}\ntarget:${slaveTarget}")
+          archiveArtifacts artifacts: 'slave.properties', fingerprint: true
+        }
+      }
     }
+  }
 }

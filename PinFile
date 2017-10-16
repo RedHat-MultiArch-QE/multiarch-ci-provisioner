@@ -4,9 +4,9 @@ aarch64-slave:
   hooks:
     postup:
       - type: ansible
-        name: init
+        name: config
         actions:
-          - playbook: init.yml
+          - playbook: config.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
 
 ppc64le-slave:
@@ -15,9 +15,9 @@ ppc64le-slave:
   hooks:
     postup:
       - type: ansible
-        name: init
+        name: config
         actions:
-          - playbook: init.yml
+          - playbook: config.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
 
 s390x-slave:
@@ -26,9 +26,9 @@ s390x-slave:
   hooks:
     postup:
       - type: ansible
-        name: init
+        name: config
         actions:
-          - playbook: init.yml
+          - playbook: config.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
 
 x86_64-slave:
@@ -37,7 +37,7 @@ x86_64-slave:
   hooks:
     postup:
       - type: ansible
-        name: init
+        name: config
         actions:
-          - playbook: init.yml
+          - playbook: config.yml
             extra_vars: {ansible_ssh_private_key_file: '~/.ssh/id_rsa', ansible_ssh_common_args='-o StrictHostKeyChecking=no'}
