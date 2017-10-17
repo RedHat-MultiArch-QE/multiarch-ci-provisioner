@@ -9,5 +9,7 @@ oc new-app provisioner-builder
 oc login -u system:admin
 oc adm policy add-scc-to-user privileged system:serviceaccount:multiarch-provisioner:jenkins
 oc login -u developer
+# List the jenkins token so you can easily copy it into the Jenkins instance
+oc serviceaccounts get-token jenkins
 
 exit 0
