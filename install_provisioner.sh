@@ -9,4 +9,4 @@ bash setup/install.sh
 bash setup/clusterup.sh
 
 # Initialize projects within cluster
-bash setup/init.sh
+bash setup/init_openshift.sh
