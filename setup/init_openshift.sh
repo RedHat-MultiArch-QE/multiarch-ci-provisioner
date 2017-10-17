@@ -7,7 +7,7 @@ oc create -f templates/provision-multiarch-slave-template.yml
 oc create -f templates/teardown-multiarch-slave-template.yml
 
 # Read username
-read -p "Gitlab username: " username; echo
+read -p "Gitlab username: " username
 
 # Read password
 stty -echo
