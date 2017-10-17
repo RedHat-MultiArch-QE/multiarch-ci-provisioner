@@ -6,8 +6,10 @@ oc create -f templates/provisioner-template.yml
 oc create -f templates/provision-multiarch-slave-template.yml
 oc create -f templates/teardown-multiarch-slave-template.yml
 oc new-app provisioner-builder
+oc create serviceaccount jenkins -n multiarch-provisioner
+oc policy add-role-to-user basic-user system:serviceaccount:multiarch-provisioner:jenkins
 oc login -u system:admin
-oc adm policy add-scc-to-user privileged developer
+oc adm policy add-scc-to-user privileged system:serviceaccount:multiarch-provisioner:jenkins
 oc login -u developer
 
 exit 0
