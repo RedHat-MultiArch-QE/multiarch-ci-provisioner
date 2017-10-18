@@ -20,7 +20,7 @@ properties([
           description: 'Optional repo containing an Ansible playbook to run on the provisioned host.',
           name: 'CONFIG_REPO'
         ),
-        boolean(
+        booleanParam(
           defaultValue: true,
           description: 'Run cinch to connect provisioned node to Jenkins master.',
           name: 'CONNECT_AS_SLAVE'
