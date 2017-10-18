@@ -6,22 +6,27 @@
 properties([
     parameters([
         choiceParam(
-          name: 'ARCH',
-          choices: "x86_64\nppc64le\naarch64\ns390x",
-          description: 'Architecture'
+          choices: 'x86_64\nppc64le\naarch64\ns390x',
+          description: 'Architecture',
+          name: 'ARCH'
         ),
         string(
-          name: 'CONFIG_REPO',
-          description: 'Optional repo containing an Ansible playbook to run on the provisioned host.',
-          defaultValue: ''
-        ),
-        string(
-          name: 'CONFIG_FILE',
+          defaultValue: '',
           description: 'Path to file in CONFIG_REPO to specify an Ansible playbook to run on the provisioned host.',
-          defaultValue: ''
+          name: 'CONFIG_FILE'
+        ),
+        string(
+          defaultValue: '',
+          description: 'Optional repo containing an Ansible playbook to run on the provisioned host.',
+          name: 'CONFIG_REPO'
+        ),
+        boolean(
+          defaultValue: true,
+          description: 'Run cinch to connect provisioned node to Jenkins master.',
+          name: 'CONNECT_AS_SLAVE'
         )
-      ])
-  ])
+    ])
+])
 
 node ('provisioner') {
   ansiColor('xterm') {
@@ -59,11 +64,13 @@ node ('provisioner') {
         stage('Provision') {
           slaveTarget = "${params.ARCH}-slave"
           sh "linchpin -vvvv up ${slaveTarget}"
-          sh """
-            ansible-playbook --inventory inventories/${slaveTarget}.inventory \
-            --extra-vars '{ "rpm_key_imports":[], "jenkins_master_repositories":[], "jenkins_master_download_repositories":[] }' \
-            cinch/cinch/site.yml
-          """
+          if (params.CONNECT_AS_SLAVE) {
+            sh """
+              ansible-playbook --inventory inventories/${slaveTarget}.inventory \
+              --extra-vars '{ "rpm_key_imports":[], "jenkins_master_repositories":[], "jenkins_master_download_repositories":[] }' \
+              cinch/cinch/site.yml
+            """
+          }
         }
       } catch (e) {
         currentBuild.result = 'FAILURE'
