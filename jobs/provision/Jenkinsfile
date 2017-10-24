@@ -65,10 +65,9 @@ node ('provisioner') {
           slaveTarget = "${params.ARCH}-slave"
           sh "linchpin -vvvv up ${slaveTarget}"
           if (params.CONNECT_AS_SLAVE) {
-            sh "echo ~"
             sh """
               ansible-playbook --inventory inventories/${slaveTarget}.inventory \
-              --private-key /home/jenkins/.ssh/id_rsa \
+              --ssh-common-args='-o StrictHostKeyChecking=no' \
               --extra-vars '{ "rpm_key_imports":[], "jenkins_master_repositories":[], "jenkins_master_download_repositories":[] }' \
               cinch/cinch/site.yml
             """
