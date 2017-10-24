@@ -67,7 +67,6 @@ node ('provisioner') {
           if (params.CONNECT_AS_SLAVE) {
             sh """
               ansible-playbook --inventory inventories/${slaveTarget}.inventory \
-              --ssh-common-args='-o StrictHostKeyChecking=no' \
               --extra-vars '{ "rpm_key_imports":[], "jenkins_master_repositories":[], "jenkins_master_download_repositories":[] }' \
               cinch/cinch/site.yml
             """
