@@ -3,7 +3,7 @@ topology_name: s390x-slave
 resource_groups:
   - resource_group_name: s390x
     resource_group_type: beaker
-    job_group: multiarch-ci
+    job_group: multiarch-qe
     whiteboard: "s390x slave for multiarch testing"
     recipesets:
     - distro: "RHEL-7.4"
