@@ -12,55 +12,55 @@ properties([
       ])
   ])
 node ('provisioner') {
-    ansiColor('xterm') {
-        timestamps {
-            def target = null
+  ansiColor('xterm') {
+    timestamps {
+      def target = null
 
-            // Prepare the cinch teardown inventory
-            stage('Setup') {
-                sh 'kinit -k jpoulin'
+      // Prepare the cinch teardown inventory
+      stage('Setup') {
+        sh 'kinit -k jpoulin'
 
-                // Clone the provisioning setup
-                git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
-                
-                dir('cinch') {
-                    git 'https://github.com/RedHatQE/cinch'
-                }
-                
-                try {
-                    // Copy artifacts from build
-                    step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
-                          projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    step([$class: 'CopyArtifact', filter: 'resources/*.output',
-                          projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                    step([$class: 'CopyArtifact', filter: 'slave.properties',
-                          projectName         : 'provision-multiarch-slave',
-                          selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-                } catch (e) {
-                    // The provisioning job did not successfully provision a machine, so there is nothing to teardown
-                    currentBuild.result = 'SUCCESS'
-                    return
-                }
+        // Clone the provisioning setup
+        git 'https://github.com/jaypoulz/multiarch-ci-pipeline'
 
-                // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
-                def slaveProps = readProperties file: 'slave.properties'
-
-                // Retrieve the appropriate slave name
-                target = slaveProps.target
-            }
-
-            // Preform the actual teardown
-            stage('Teardown') {
-                try {
-                    sh "ansible-playbook --inventory inventories/${target}.inventory cinch/cinch/teardown.yml"
-                } catch (e) {
-                    println e
-                }
-                
-                sh "linchpin destroy ${target}"
-            }
+        dir('cinch') {
+          git 'https://github.com/RedHatQE/cinch'
         }
+
+        try {
+          // Copy artifacts from build
+          step([$class: 'CopyArtifact', filter: 'inventories/*.inventory',
+              projectName         : 'provision-multiarch-slave',
+              selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+          step([$class: 'CopyArtifact', filter: 'resources/*.output',
+              projectName         : 'provision-multiarch-slave',
+              selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+          step([$class: 'CopyArtifact', filter: '*-slave.properties',
+              projectName         : 'provision-multiarch-slave',
+              selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+        } catch (e) {
+          // The provisioning job did not successfully provision a machine, so there is nothing to teardown
+          currentBuild.result = 'SUCCESS'
+          return
+        }
+
+        // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
+        def slaveProps = readProperties file: '*-slave.properties'
+
+        // Retrieve the appropriate slave name
+        target = slaveProps.target
+      }
+
+      // Preform the actual teardown
+      stage('Teardown') {
+        try {
+          sh "ansible-playbook --inventory inventories/${target}.inventory cinch/cinch/teardown.yml"
+        } catch (e) {
+          println e
+        }
+
+        sh "linchpin destroy ${target}"
+      }
     }
+  }
 }
