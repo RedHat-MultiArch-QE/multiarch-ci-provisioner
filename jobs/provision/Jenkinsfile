@@ -55,16 +55,14 @@ node ('provisioner') {
                   def extraVars = "{ 'rpm_key_imports':[], 'jenkins_master_repositories':[], 'jenkins_master_download_repositories':[], 'jslave_name':${slaveName}, 'jslave_label':${slaveName}, 'arch':${arch} }"
                   sh "ansible-playbook --inventory inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
                 }
-                catch (e) {
-                  println e
-                  error = e
-                  errorCount++
-                  provisioned = false
-                }
-                finally {
-                  // Archive slave name in a slave.properties file
-                  writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}")
-                }
+              } catch (e) {
+                println e
+                error = e
+                errorCount++
+                provisioned = false
+              } finally {
+                // Archive slave name in a slave.properties file
+                writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}")
               }
             }
           }
