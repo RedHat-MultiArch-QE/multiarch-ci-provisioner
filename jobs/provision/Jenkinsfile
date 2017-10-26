@@ -5,10 +5,11 @@
  */
 properties([
     parameters([
-        string(
-          defaultValue: 'x86_64,ppc64le,aarch64,s390x',
-          description: 'Comma delimited list of architectures to run test on.',
-          name: 'ARCHES'
+        choiceParam(
+          choices: 'x86_64\nppc64le\naarch64\ns390x',
+          defaultValue: 'x86_64'
+          description: 'Architecture',
+          name: 'ARCH'
         ),
 
         booleanParam(
@@ -37,49 +38,34 @@ node ('provisioner') {
       }
 
       try {
-        def arches = params.ARCHES.split(',')
-        def archCount = arches.size()
-        def errorCount = 0
-        def archTasks=[:]
-        for (arch in archList) {
-          archTasks[arch] = {
-            def slaveTarget = "${arch}-slave"
-            def slaveName = "${slaveTarget}-${env.BUILD_NUMBER}"
-            def provisioned = true
-            def error = null
+        def arch = params.ARCH
+        def slaveTarget = "${arch}-slave"
+        def slaveName = "${slaveTarget}-${env.BUILD_NUMBER}"
+        def provisioned = true
+        def error = null
 
-            stage ("Provision ${slaveTarget}") {
-              try {
-                sh "linchpin -vvvv up ${slaveTarget}"
-                if (params.CONNECT_AS_SLAVE) {
-                  def extraVars = "{ 'rpm_key_imports':[], 'jenkins_master_repositories':[], 'jenkins_master_download_repositories':[], 'jslave_name':${slaveName}, 'jslave_label':${slaveName}, 'arch':${arch} }"
-                  sh "ansible-playbook --inventory inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
-                }
-              } catch (e) {
-                println e
-                error = e
-                errorCount++
-                provisioned = false
-              } finally {
-                // Archive slave name in a slave.properties file
-                writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}")
-              }
+        stage ("Provision") {
+          try {
+            sh "linchpin -vvvv up ${slaveTarget}"
+            if (params.CONNECT_AS_SLAVE) {
+              def extraVars = "{ 'rpm_key_imports':[], 'jenkins_master_repositories':[], 'jenkins_master_download_repositories':[], 'jslave_name':${slaveName}, 'jslave_label':${slaveName}, 'arch':${arch} }"
+              sh "ansible-playbook --inventory inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
             }
+          } catch (e) {
+            println e
+            error = e
+            provisioned = false
+          } finally {
+            // Archive slave name in a slave.properties file
+            writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}")
           }
         }
 
-        parallel(archTasks)
-
-        if (errorCount == archCount) {
-          currentBuild.result = 'FAILURE'
-        } else if (errorCount > 0){
-          currentBuild.result = 'UNSTABLE'
-        }
       } catch (e) {
         currentBuild.result = 'FAILURE'
       } finally {
         stage('Archive') {
-          // Archive provisioning output
+          // Archive linchpin output and provision summary properties file
           archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
           archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
           archiveArtifacts artifacts: '*-slave.properties', fingerprint: true
