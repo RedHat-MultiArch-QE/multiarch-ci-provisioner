@@ -10,13 +10,13 @@ rhel_base_urls:
   ppc64le: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/power-le/7/7Server"
   s390x: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/system-z/7/7Server/"
   aarch: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/arm-64/7/7Server/"
-rhel_base: "{{ rhel_base_urls[lookup('env', 'ARCH')] }}"
+rhel_base: "{{ rhel_base_urls[arch] }}"
 
 
 # URL to Jenkins master for the slave to connect to
 jenkins_master_url: 'https://multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
-jslave_name: "{{ lookup('env', 'JSLAVE_NAME') }}"
-jslave_label: "{{ lookup('env', 'JSLAVE_LABEL') }}"
+jslave_name: ""
+jslave_label: ""
 
 # Jenkins Slave Registration Credentials
 jenkins_slave_username: "{{ lookup('env', 'JENKINS_SLAVE_USERNAME') }}"
