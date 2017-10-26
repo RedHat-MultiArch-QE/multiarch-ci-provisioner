@@ -48,7 +48,7 @@ node ('provisioner') {
           try {
             sh "linchpin -vvvv up ${slaveTarget}"
             if (params.CONNECT_AS_SLAVE) {
-              def extraVars = "{ 'rpm_key_imports':[], 'jenkins_master_repositories':[], 'jenkins_master_download_repositories':[], 'jslave_name':${slaveName}, 'jslave_label':${slaveName}, 'arch':${arch} }"
+              def extraVars = "\'{ \'rpm_key_imports\':[], \'jenkins_master_repositories\':[], \'jenkins_master_download_repositories\':[], \'jslave_name\':${slaveName}, \'jslave_label\':${slaveName}, \'arch\':${arch} }\'"
               sh "ansible-playbook --inventory inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
             }
           } catch (e) {
