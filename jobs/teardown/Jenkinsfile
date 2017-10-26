@@ -45,7 +45,7 @@ node ('provisioner') {
         }
 
         // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
-        def propertyFiles = findFile glob: '*-slave.properties'
+        def propertyFiles = findFiles glob: '*-slave.properties'
         def slaveProps = readProperties file: "${propertyFiles[0].path}"
 
         // Retrieve the appropriate slave name
