@@ -35,9 +35,10 @@ node ('provisioner') {
           step([$class: 'CopyArtifact', filter: 'resources/*.output',
               projectName         : 'provision-multiarch-slave',
               selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-          step([$class: 'CopyArtifact', filter: '*-slave.properties',
+          def properties = step([$class: 'CopyArtifact', filter: '*-slave.properties',
               projectName         : 'provision-multiarch-slave',
               selector            : [$class     : 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
+          println properties
         } catch (e) {
           // The provisioning job did not successfully provision a machine, so there is nothing to teardown
           currentBuild.result = 'SUCCESS'
