@@ -8,7 +8,7 @@ spec:
   source:
     type: Git
     git:
-      uri: https://github.com/jaypoulz/multiarch-openshift-ci
+      uri: https://github.com/RedHat-MultiArch-QE/multiarch-openshift-ci
       branch: dev
   strategy:
     type: JenkinsPipeline
