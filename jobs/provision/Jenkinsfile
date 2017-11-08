@@ -42,7 +42,7 @@ node ('provisioner') {
         def slaveTarget = "${arch}-slave"
         def slaveName = "${slaveTarget}-${env.BUILD_NUMBER}"
         def provisioned = true
-        def error = null
+        def error = ""
 
         stage ("Provision") {
           try {
@@ -53,7 +53,7 @@ node ('provisioner') {
             }
           } catch (e) {
             println e
-            error = e
+            error = e.toString()
             provisioned = false
           } finally {
             // Archive slave name in a slave.properties file
