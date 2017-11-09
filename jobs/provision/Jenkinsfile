@@ -52,12 +52,11 @@ node ('provisioner') {
               sh "ansible-playbook --inventory inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
             }
           } catch (e) {
-            println e
             error = e.toString()
             provisioned = false
           } finally {
             // Archive slave name in a slave.properties file
-            writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}")
+            writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}\narch:${arch}")
           }
         }
 
