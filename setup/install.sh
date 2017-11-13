@@ -1,8 +1,8 @@
 #!/bin/bash
 sudo yum install -y git docker firewalld;
-curl -L -O https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz
-tar xvzf openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz;
-sudo cp openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit/oc /bin;
+curl -L --create-dirs --output downloads/openshift-tools.gz https://github.com/openshift/origin/releases/download/v3.6.1/openshift-origin-client-tools-v3.6.1-008f2d5-linux-64bit.tar.gz;
+tar xvzf downloads/openshift-tools.gz downloads/openshift-tools;
+sudo cp openshift-tools/oc /bin;
 
 # Start Services
 sudo systemctl enable docker;
