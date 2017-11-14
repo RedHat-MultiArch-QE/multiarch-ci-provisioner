@@ -54,7 +54,7 @@ node ('provisioner') {
               sh "ansible-playbook --inventory inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
               node (slaveName) {
                 sh 'sudo yum install python-devel openssl-devel libffi-devel -y'
-                sh 'sudo pip install --upgrade pip; supo pip install --upgrade setuptools; sudo pip install --upgrade ansible'
+                sh 'sudo pip install --upgrade pip; sudo pip install --upgrade setuptools; sudo pip install --upgrade ansible'
               }
             }
           } catch (e) {
