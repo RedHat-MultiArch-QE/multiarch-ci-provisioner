@@ -52,8 +52,13 @@ node ('provisioner') {
       // Preform the actual teardown
       stage('Teardown') {
         try {
-          sh "ansible-playbook --inventory inventories/${slaveProps.target}.inventory cinch/cinch/teardown.yml"
-          sh "linchpin destroy ${slaveProps.target}"
+          try {
+            sh "ansible-playbook --inventory inventories/${slaveProps.target}.inventory cinch/cinch/teardown.yml"
+          } catch (e) {
+            throw e
+          } finally {
+            sh "linchpin destroy ${slaveProps.target}"
+          }
         } catch (e) {
           println e
           
