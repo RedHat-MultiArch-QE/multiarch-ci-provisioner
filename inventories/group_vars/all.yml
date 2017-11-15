@@ -6,10 +6,10 @@ certificate_authority_urls:
   - https://password.corp.redhat.com/RH-IT-Root-CA.crt
   - https://engineering.redhat.com/Eng-CA.crt
 rhel_base_urls:
-  x86_64: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/server/7/7Server/"
+  x86_64: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/server/7/7Server"
   ppc64le: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/power-le/7/7Server"
-  s390x: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/system-z/7/7Server/"
-  aarch64: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/arm-64/7/7Server/"
+  s390x: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/system-z/7/7Server"
+  aarch64: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/arm-64/7/7Server"
 rhel_base: "{{ rhel_base_urls[arch] }}"
 
 
