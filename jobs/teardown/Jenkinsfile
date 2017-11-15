@@ -14,7 +14,7 @@ properties([
 node ('provisioner') {
   ansiColor('xterm') {
     timestamps {
-      def target = null
+      def slaveProps = null
 
       // Prepare the cinch teardown inventory
       stage('Setup') {
@@ -46,21 +46,21 @@ node ('provisioner') {
 
         // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
         def propertyFiles = findFiles glob: '*-slave.properties'
-        def slaveProps = readProperties file: "${propertyFiles[0].path}"
-
-        // Retrieve the appropriate slave name
-        target = slaveProps.target
+        slaveProps = readProperties file: "${propertyFiles[0].path}"
       }
 
       // Preform the actual teardown
       stage('Teardown') {
         try {
-          sh "ansible-playbook --inventory inventories/${target}.inventory cinch/cinch/teardown.yml"
+          sh "ansible-playbook --inventory inventories/${slaveProps.target}.inventory cinch/cinch/teardown.yml"
+          sh "linchpin destroy ${slaveProps.target}"
         } catch (e) {
           println e
+          
+          if (slaveProps.error == null || slaveProps.error.isEmpty()) {
+            currentBuild.result = 'FAILURE'
+          }
         }
-
-        sh "linchpin destroy ${target}"
       }
     }
   }
