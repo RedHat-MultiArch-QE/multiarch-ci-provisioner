@@ -14,8 +14,7 @@ rhel_base: "{{ rhel_base_urls[arch] }}"
 
 
 # URL to Jenkins master for the slave to connect to
-jenkins_master_url: 'https://multiarch-qe-aos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com'
-jslave_name: ""
+jenkins_master_url: "{{ lookup('env', 'JENKINS_MASTER_URL') }}"
 jslave_label: ""
 
 # Jenkins Slave Registration Credentials
