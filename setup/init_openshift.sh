@@ -1,9 +1,8 @@
 #!/bin/bash
 oc login -u developer
 oc new-project multiarch-provisioner
-oc new-app jenkins-persistent
-oc create -f templates/multiarch-origin-build-template.yml
 oc create -f templates/provisioner-template.yml
+oc create -f templates/multiarch-origin-build-template.yml
 oc create -f templates/provision-multiarch-slave-template.yml
 oc create -f templates/teardown-multiarch-slave-template.yml
 
