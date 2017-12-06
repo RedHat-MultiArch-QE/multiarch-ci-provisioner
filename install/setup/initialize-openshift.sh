@@ -1,22 +1,24 @@
 #!/bin/bash
 oc login -u developer
-oc new-project multiarch-provisioner
+oc new-project redhat-multiarch-qe
 oc new-app jenkins-persistent
 oc create -f templates/provisioner-template.yml
 oc create -f templates/multiarch-origin-build-template.yml
 oc create -f templates/provision-multiarch-slave-template.yml
 oc create -f templates/teardown-multiarch-slave-template.yml
 
-# Read username
-read -p "Gitlab username: " username
+# Read Jenkins username
+read -p "Jenkins username: " username
 
 # Read password
 stty -echo
-read -p "Gitlab token: " token; echo
+read -p "Jenkins token: " token; echo
 stty echo
 
-oc create secret generic gitlab --from-literal=username=$username --from-literal=password=$token --namespace=multiarch-provisioner
-oc secrets link builder gitlab --for=pull --namespace=multiarch-provisioner
+oc create secret generic beaker --from-file images/provisioner/secrets/beaker/beaker.conf --from-file images/provisioner/secrets/beaker/id_rsa
+oc create secret generic krb5 --from-file images/provisioner/secrets/krb5/krb5.conf --from-file images/provisioner/secrets/krb5/krb5.keytab
+oc create secret generic jenkins --from-literal username=$username --from-liter password=$token
+
 oc new-app provisioner-builder
 oc login -u system:admin
 oc adm policy add-scc-to-user privileged system:serviceaccount:multiarch-provisioner:jenkins
