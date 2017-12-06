@@ -1,5 +1,5 @@
 *.log
 *.out
-inventories/*.inventory
-resources/*.output
+*.inventory
+*.output
 downloads/
