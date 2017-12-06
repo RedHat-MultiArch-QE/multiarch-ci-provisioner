@@ -10,8 +10,8 @@ ENV HOME=/root \
 RUN pwd; ls -a
 COPY .config .config
 RUN ls -a
-COPY * .
-RUN ls -a
+COPY * dir/ 
+RUN ls -a dir
 
 # Copy over configuration files
 COPY .config/beaker-ssh-key /home/jenkins/.ssh/id_rsa
