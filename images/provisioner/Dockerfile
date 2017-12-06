@@ -7,7 +7,7 @@ ENV HOME=/root \
     KRB5CCNAME=FILE:/root/krb5cc_0 \
     ANSIBLE_HOST_KEY_CHECKING=False
 
-RUN pws; ls -a
+RUN pwd; ls -a
 
 # Copy over configuration files
 COPY .config/beaker-ssh-key /home/jenkins/.ssh/id_rsa
