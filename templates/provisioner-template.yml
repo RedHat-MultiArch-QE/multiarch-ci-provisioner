@@ -39,6 +39,9 @@ objects:
       type: Git
     strategy:
       customStrategy:
+        from:
+          kind: DockerImage
+          name: openshift/origin-custom-docker-builder
         secrets:
           - secretSource:
               name: kbr5-conf
