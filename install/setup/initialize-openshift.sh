@@ -17,7 +17,7 @@ stty echo
 
 oc create secret generic beaker --from-file images/provisioner/secrets/beaker/beaker.conf --from-file images/provisioner/secrets/beaker/id_rsa
 oc create secret generic krb5 --from-file images/provisioner/secrets/krb5/krb5.conf --from-file images/provisioner/secrets/krb5/krb5.keytab
-oc create secret generic jenkins --from-literal username=$username --from-liter password=$token
+oc create secret generic jenkins --from-literal username=$username --from-literal password=$token
 
 oc new-app provisioner-builder
 oc login -u system:admin
