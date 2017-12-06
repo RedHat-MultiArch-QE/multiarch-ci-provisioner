@@ -7,18 +7,13 @@ ENV HOME=/root \
     KRB5CCNAME=FILE:/root/krb5cc_0 \
     ANSIBLE_HOST_KEY_CHECKING=False
 
-RUN pwd; ls -a
-COPY .config .config
-RUN ls -a
-COPY * dir/ 
-RUN ls -a dir
-
 # Copy over configuration files
-COPY .config/beaker-ssh-key /home/jenkins/.ssh/id_rsa
-COPY .config/beaker-conf /root/.beaker_config/config
-COPY .config/krb5-conf /etc/krb5.conf
-COPY .config/krb5-keytab /etc/krb5.keytab
-COPY .config/jenkins-conf /root/.jenkins/credentials
+COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
+COPY beaker/beaker.conf /root/.beaker_config/config
+COPY krb5/krb5.conf /etc/krb5.conf
+COPY krb5/krb5.keytab /etc/krb5.keytab
+COPY jenkins/username /home/jenkins/.provisioner_config/jenkins-username
+COPY jenkins/password /home/jenkins/.provisioner_config/jenkins-password
 
 # Set WORKDIR to HOME
 WORKDIR /root
