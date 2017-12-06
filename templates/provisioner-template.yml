@@ -39,10 +39,10 @@ objects:
       type: Git
       secrets:
         - secret:
-            name: kbr5-conf
+            name: krbV-conf
           destinationDir: .config 
         - secret:
-            name: kbr5-keytab
+            name: krbV-keytab
           destinationDir: .config
         - secret:
             name: beaker-ssh-key
