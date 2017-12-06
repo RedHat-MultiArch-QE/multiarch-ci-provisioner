@@ -38,7 +38,7 @@ objects:
         name: gitlab 
       type: Git
     strategy:
-      customerStrategy:
+      customStrategy:
         secrets:
           - secretSource:
               name: kbr5-conf
