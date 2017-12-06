@@ -10,6 +10,9 @@ ENV HOME=/root \
 # Set WORKDIR to HOME
 WORKDIR /root
 
+# Set Jenkins Slave Login Variables
+RUN 
+
 # Install all dependencies from yum
 RUN yum-config-manager --add-repo=http://download.lab.eng.bos.redhat.com/beakerrepos/client/CentOS7/ && \
 yum upgrade -y --skip-broken && \
@@ -24,3 +27,15 @@ RUN pip install -U pip setuptools && \
     pip install -U beaker-common beaker-client && \
     pip install -U linchpin==1.0.4 cinch
 
+# Setup certificates for RedHat
+RUN cd /etc/pki/ca-trust/source/anchors && \
+    curl -o RedHat_CA.crt --insecure -L https://password.corp.redhat.com/cacert.crt && \
+    curl -o PnTDevOps_CA.crt --insecure -L https://engineering.redhat.com/Eng-CA.crt && \
+    curl -o RH-IT-Root-CA.crt --insecure -L https://password.corp.redhat.com/RH-IT-Root-CA.crt && \
+    update-ca-trust extract
+
+# Initialize SSH
+WORKDIR /home/jenkins 
+RUN chmod 600 .ssh/id_rsa && \
+    eval `ssh-agent -s` && \
+    ssh-add .ssh/id_rsa

@@ -17,7 +17,7 @@ objects:
     labels:
       role: provisioner
     name: provisioner
-    namespace: provisioner
+    namespace: redhat-multiarch-qe 
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
@@ -38,19 +38,34 @@ objects:
         name: gitlab 
       type: Git
     strategy:
-      dockerStrategy:
-      type: Docker
+      customerStrategy:
+        secrets:
+          - secretSource:
+              name: kbr5-conf
+            mountPath: /etc/krb5.conf
+          - secretSource:
+              name: kbr5-keytab
+            mountPath: /etc/krb5.keytab
+          - secretSource:
+              name: beaker-ssh-key
+            mountPath: /home/jenkins/.ssh/id_rsa
+          - secretSource:
+              name: beaker-conf
+            mountPath: /root/.beaker_config/conf
+          - secretSource:
+              name: jenkins-conf
+            mountPath: /etc/jenkins.conf
     triggers:
     - type: ConfigChange
 parameters:
 - description: Git repository with Dockerfile and slave entrypoint.
   displayName: Repository URL
   name: SLAVE_REPO_URL
-  value: https://gitlab.com/jaypoulz/multiarch-ci-utils.git
+  value: https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner.git
 - description: The sub-directory inside the repository.
   displayName: Context Directory
   name: SLAVE_REPO_CONTEXTDIR
-  value: images/jenkins-slave
+  value: images/provisioner
 - description: The git ref or tag to use for customization.
   displayName: Git Reference
   name: SLAVE_REPO_REF
