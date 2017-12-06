@@ -55,6 +55,7 @@ objects:
           destinationDir: /etc
     strategy:
       dockerStrategy:
+      type: Docker
     triggers:
     - type: ConfigChange
 parameters:
