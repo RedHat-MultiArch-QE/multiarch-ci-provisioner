@@ -6,12 +6,16 @@ FROM openshift/jenkins-slave-base-centos7
 ENV HOME=/root \
     KRB5CCNAME=FILE:/root/krb5cc_0 \
     ANSIBLE_HOST_KEY_CHECKING=False
-    
+
+# Copy over configuration files
+COPY .config/beaker-ssh-key /home/jenkins/.ssh/id_rsa
+COPY .config/beaker-conf /root/.beaker_config/config
+COPY .config/krb5-conf /etc/krb5.conf
+COPY .config/krb5-keytab /etc/krb5.keytab
+COPY .config/jenkins-conf /root/.jenkins/credentials
+
 # Set WORKDIR to HOME
 WORKDIR /root
-
-# Set Jenkins Slave Login Variables
-RUN 
 
 # Install all dependencies from yum
 RUN yum-config-manager --add-repo=http://download.lab.eng.bos.redhat.com/beakerrepos/client/CentOS7/ && \
@@ -35,7 +39,7 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     update-ca-trust extract
 
 # Initialize SSH
-WORKDIR /home/jenkins 
+WORKDIR /home/jenkins
 RUN chmod 600 .ssh/id_rsa && \
     eval `ssh-agent -s` && \
     ssh-add .ssh/id_rsa
