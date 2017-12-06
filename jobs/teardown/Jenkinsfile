@@ -21,7 +21,7 @@ node ('provisioner') {
         sh 'kinit -k jpoulin'
 
         // Clone the provisioning setup
-        git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-pipeline'
+        git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner'
 
         dir('cinch') {
           git 'https://github.com/RedHatQE/cinch'

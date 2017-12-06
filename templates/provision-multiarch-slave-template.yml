@@ -8,7 +8,7 @@ spec:
   source:
     type: Git
     git:
-      uri: https://github.com/RedHat-MultiArch-QE/multiarch-ci-pipeline
+      uri: https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner
   strategy:
     type: JenkinsPipeline
     jenkinsPipelineStrategy:
