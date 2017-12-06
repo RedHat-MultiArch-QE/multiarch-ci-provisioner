@@ -40,19 +40,19 @@ objects:
       secrets:
         - secret:
             name: kbr5-conf
-          destinationDir: /etc
+          destinationDir: .config 
         - secret:
             name: kbr5-keytab
-          destinationDir: /etc
+          destinationDir: .config
         - secret:
             name: beaker-ssh-key
-          destinationDir: /home/jenkins/.ssh
+          destinationDir: .config
         - secret:
             name: beaker-conf
-          destinationDir: /root/.beaker_config
+          destinationDir: .config
         - secret:
             name: jenkins-conf
-          destinationDir: /etc
+          destinationDir: .config
     strategy:
       dockerStrategy:
       type: Docker
