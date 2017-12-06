@@ -8,6 +8,10 @@ ENV HOME=/root \
     ANSIBLE_HOST_KEY_CHECKING=False
 
 RUN pwd; ls -a
+COPY .config .config
+RUN ls -a
+COPY * .
+RUN ls -a
 
 # Copy over configuration files
 COPY .config/beaker-ssh-key /home/jenkins/.ssh/id_rsa
