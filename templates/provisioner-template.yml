@@ -39,23 +39,16 @@ objects:
       type: Git
       secrets:
         - secret:
-            name: krb5-conf
-          destinationDir: .config 
+            name: krb5
+          destinationDir: krb5 
         - secret:
-            name: krb5-keytab
-          destinationDir: .config
+            name: beaker
+          destinationDir: beaker 
         - secret:
-            name: beaker-ssh-key
-          destinationDir: .config
-        - secret:
-            name: beaker-conf
-          destinationDir: .config
-        - secret:
-            name: jenkins-conf
-          destinationDir: .config
+            name: jenkins
+          destinationDir: jenkins 
     strategy:
       dockerStrategy:
-      type: Docker
     triggers:
     - type: ConfigChange
 parameters:
