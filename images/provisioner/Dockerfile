@@ -12,6 +12,7 @@ COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
 COPY beaker/beaker.conf /root/.beaker_config/config
 COPY krb5/krb5.conf /etc/krb5.conf
 COPY krb5/krb5.keytab /etc/krb5.keytab
+COPY krb5/tenant /home/jenkins/.k5identity
 COPY jenkins/username /home/jenkins/.provisioner_config/jenkins-username
 COPY jenkins/password /home/jenkins/.provisioner_config/jenkins-password
 
