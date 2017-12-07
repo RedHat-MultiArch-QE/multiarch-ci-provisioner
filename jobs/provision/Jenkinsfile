@@ -26,7 +26,7 @@ node ('provisioner') {
 
       stage('Setup') {
         // Ensure kerberos ticket is fresh
-        sh 'kinit -k jpoulin'
+        sh 'kinit -k'
 
         // Get linchpin topology
         git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner'
