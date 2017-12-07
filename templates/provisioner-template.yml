@@ -34,8 +34,6 @@ objects:
       git:
         ref: ${SLAVE_REPO_REF}
         uri: ${SLAVE_REPO_URL}
-      sourceSecret:
-        name: gitlab 
       type: Git
       secrets:
         - secret:
