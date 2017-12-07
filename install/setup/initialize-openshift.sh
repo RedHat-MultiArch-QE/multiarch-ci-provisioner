@@ -7,16 +7,19 @@ oc create -f templates/multiarch-origin-build-template.yml
 oc create -f templates/provision-multiarch-slave-template.yml
 oc create -f templates/teardown-multiarch-slave-template.yml
 
+# Read Kerberos Service Tenant
+read -p "Kerberos Service Tenant: " ktenant
+
 # Read Jenkins username
-read -p "Jenkins username: " username
+read -p "Jenkins Username: " username
 
 # Read password
 stty -echo
-read -p "Jenkins token: " token; echo
+read -p "Jenkins Token: " token; echo
 stty echo
 
 oc create secret generic beaker --from-file images/provisioner/secrets/beaker/beaker.conf --from-file images/provisioner/secrets/beaker/id_rsa
-oc create secret generic krb5 --from-file images/provisioner/secrets/krb5/krb5.conf --from-file images/provisioner/secrets/krb5/krb5.keytab
+oc create secret generic krb5 --from-file images/provisioner/secrets/krb5/krb5.conf --from-file images/provisioner/secrets/krb5/krb5.keytab --from-literal tenant=${ktenant}
 oc create secret generic jenkins --from-literal username=$username --from-literal password=$token
 
 oc new-app provisioner-builder
