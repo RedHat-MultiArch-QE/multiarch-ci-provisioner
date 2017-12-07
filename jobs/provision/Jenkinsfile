@@ -49,7 +49,7 @@ node ('provisioner') {
         stage ("Provision") {
           try {
             dir ('workspace') {
-              sh "pwd; ls; linchpin -vvvv up ${slaveTarget}"
+              sh "linchpin --workspace . --verbose up ${slaveTarget}"
             }
             if (params.CONNECT_AS_SLAVE) {
               def extraVars = "\'{ \"rpm_key_imports\":[], \"jenkins_master_repositories\":[], \"jenkins_master_download_repositories\":[], \"jslave_name\":${slaveName}, \"jslave_label\":${slaveName}, \"arch\":${arch} }\'"
