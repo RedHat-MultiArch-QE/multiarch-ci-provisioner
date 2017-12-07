@@ -49,7 +49,7 @@ node ('provisioner') {
         stage ("Provision") {
           try {
             dir ('workspace') {
-              sh "linchpin -vvvv up ${slaveTarget}"
+              sh "pwd; ls; linchpin -vvvv up ${slaveTarget}"
             }
             if (params.CONNECT_AS_SLAVE) {
               def extraVars = "\'{ \"rpm_key_imports\":[], \"jenkins_master_repositories\":[], \"jenkins_master_download_repositories\":[], \"jslave_name\":${slaveName}, \"jslave_label\":${slaveName}, \"arch\":${arch} }\'"
@@ -64,7 +64,7 @@ node ('provisioner') {
             provisioned = false
           } finally {
             // Archive slave name in a slave.properties file
-            writeFile(file: "${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}\narch:${arch}")
+            writeFile(file: "workspace/${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}\narch:${arch}")
           }
         }
 
@@ -73,9 +73,9 @@ node ('provisioner') {
       } finally {
         stage('Archive') {
           // Archive linchpin output and provision summary properties file
-          archiveArtifacts artifacts: 'inventories/*.inventory', fingerprint: true
-          archiveArtifacts artifacts: 'resources/*.output', fingerprint: true
-          archiveArtifacts artifacts: '*-slave.properties', fingerprint: true
+          archiveArtifacts artifacts: 'workspace/inventories/*.inventory', fingerprint: true
+          archiveArtifacts artifacts: 'workspace/resources/*.output', fingerprint: true
+          archiveArtifacts artifacts: 'workspace/*-slave.properties', fingerprint: true
         }
       }
     }
