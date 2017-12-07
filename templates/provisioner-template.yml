@@ -46,6 +46,7 @@ objects:
             name: jenkins
           destinationDir: jenkins 
     strategy:
+      type: Docker
       dockerStrategy:
     triggers:
     - type: ConfigChange
