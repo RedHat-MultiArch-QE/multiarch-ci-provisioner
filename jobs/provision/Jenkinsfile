@@ -28,7 +28,7 @@ podTemplate(
   name: 'provisioner',
   label: 'provisioner',
   cloud: 'openshift',
-  serviceAccount: 'jenkins-openshift-oauth',
+  serviceAccount: 'jenkins',
   idleMinutes: 0,
   namespace: 'redhat-multiarch-qe',
   containers: [
