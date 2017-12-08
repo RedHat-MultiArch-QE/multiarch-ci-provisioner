@@ -75,15 +75,13 @@ node ('provisioner') {
             provisioned = false
           } finally {
             // Archive slave name in a slave.properties file
-            def results = """
-              name:${slaveName}
-              target:${slaveTarget}
-              arch:${arch}"
-              provisioned:${provisioned}
-              jenkins.master.connected:${connectedToMaster}
-              ansible.installed:${ansibleInstalled}
-              error:${error}
-            """
+            def results = "name:${slaveName}\n" +
+              "target:${slaveTarget}\n" +
+              "arch:${arch}\n" +
+              "provisioned:${provisioned}\n" +
+              "jenkins.master.connected:${connectedToMaster}\n" +
+              "ansible.installed:${ansibleInstalled}\n" +
+              "error:${error}\n"
             writeFile(file: "workspace/${slaveTarget}.properties", text: results)
           }
         }
