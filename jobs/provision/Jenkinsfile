@@ -49,6 +49,7 @@ node ('provisioner') {
         stage ("Provision") {
           try {
             dir ('workspace') {
+              sh 'bkr whoami'
               sh "linchpin --workspace . --verbose up ${slaveTarget}"
             }
             if (params.CONNECT_AS_SLAVE) {
