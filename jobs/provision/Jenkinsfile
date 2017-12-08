@@ -52,6 +52,9 @@ node ('provisioner') {
       stage('Setup') {
         // Ensure kerberos ticket is fresh
         sh 'tenant=$(< ~/.k5identity); kinit -k $tenant'
+        sh 'cat /etc/beaker/client.conf'
+        sh 'ls /etc/krb5/'
+        sh 'cat /etc/krb5/krb5.conf'
         sh 'bkr whoami'
 
         // Get linchpin topology
