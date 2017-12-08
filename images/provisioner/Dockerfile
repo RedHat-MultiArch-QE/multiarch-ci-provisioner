@@ -41,7 +41,7 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     update-ca-trust extract
 
 # Configure beaker
-RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"${ktenant}@REDAT.COM\"" >> /etc/beaker/client.conf && \
+RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"${ktenant}@REDHAT.COM\"" >> /etc/beaker/client.conf && \
     cp /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt
 
 # Initialize SSH
