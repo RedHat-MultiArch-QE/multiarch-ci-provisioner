@@ -22,7 +22,7 @@ properties([
           name: 'INSTALL_ANSIBLE'
         )
     ])
-])
+]),
 
 podTemplate(
   name: provisioner,
@@ -32,7 +32,9 @@ podTemplate(
   idleMinutes: 0,
   namespace: redhat-multiarch-qe,
   containers: [
-    // This adds the custom slave container to the pod. Must be first with name 'jnlp'          containerTemplate(name: 'jnlp',
+    // This adds the custom slave container to the pod. Must be first with name 'jnlp'
+    containerTemplate(
+      name: 'jnlp',
       image: "172.30.1.1:5000/redhat-multiarch-qe/provisioner",
       ttyEnabled: false,
       args: '${computer.jnlpmac} ${computer.name}',
@@ -41,7 +43,7 @@ podTemplate(
       privileged: true
     )
   ]
-) 
+) {
 
 node ('provisioner') {
   ansiColor('xterm') {
@@ -116,4 +118,4 @@ node ('provisioner') {
       }
     }
   }
-}
+}}
