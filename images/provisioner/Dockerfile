@@ -9,7 +9,7 @@ ENV HOME=/root \
 
 # Copy over configuration files
 COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
-COPY beaker/beaker.conf /root/.beaker_config/config
+COPY beaker/beaker.conf /etc/beaker/client.conf
 COPY krb5/krb5.conf /etc/krb5.conf
 COPY krb5/krb5.keytab /etc/krb5.keytab
 COPY krb5/tenant /home/jenkins/.k5identity
@@ -39,6 +39,9 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     curl -o PnTDevOps_CA.crt --insecure -L https://engineering.redhat.com/Eng-CA.crt && \
     curl -o RH-IT-Root-CA.crt --insecure -L https://password.corp.redhat.com/RH-IT-Root-CA.crt && \
     update-ca-trust extract
+
+# Configure beaker
+RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"$ktenant\""
 
 # Initialize SSH
 WORKDIR /home/jenkins
