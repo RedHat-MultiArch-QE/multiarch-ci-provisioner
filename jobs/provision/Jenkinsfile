@@ -52,6 +52,7 @@ node ('provisioner') {
       stage('Setup') {
         // Ensure kerberos ticket is fresh
         sh 'tenant=$(< ~/.k5identity); kinit -k $tenant'
+        sh 'bkr whoami'
 
         // Get linchpin topology
         git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner'
