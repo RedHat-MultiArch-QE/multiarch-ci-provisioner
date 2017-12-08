@@ -11,11 +11,15 @@ properties([
           description: 'Architecture',
           name: 'ARCH'
         ),
-
         booleanParam(
-          defaultValue: true,
-          description: 'Run cinch to connect provisioned node to Jenkins master.',
-          name: 'CONNECT_AS_SLAVE'
+          defaultValue: false,
+          description: 'Run cinch to connect provisioned host to Jenkins master.',
+          name: 'CONNECT_TO_MASTER'
+        ),
+        booleanParam(
+          defaultValue: false,
+          description: 'Install ansible on provisioned host.',
+          name: 'INSTALL_ANSIBLE'
         )
     ])
 ])
@@ -32,7 +36,7 @@ node ('provisioner') {
         git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner'
 
         // Download slave playbooks
-        if (params.CONNECT_AS_SLAVE) {
+        if (params.CONNECT_TO_MASTER) {
           dir('cinch') {
             git 'https://github.com/RedHatQE/cinch'
           }
@@ -44,6 +48,8 @@ node ('provisioner') {
         def slaveTarget = "${arch}-slave"
         def slaveName = "${slaveTarget}-${env.BUILD_NUMBER}"
         def provisioned = true
+        def connectedToMaster = false
+        def ansibleInstalled = false
         def error = ""
 
         stage ("Provision") {
@@ -52,20 +58,33 @@ node ('provisioner') {
               sh 'bkr whoami'
               sh "linchpin --workspace . --verbose up ${slaveTarget}"
             }
-            if (params.CONNECT_AS_SLAVE) {
+            if (params.CONNECT_TO_MASTER) {
               def extraVars = "\'{ \"rpm_key_imports\":[], \"jenkins_master_repositories\":[], \"jenkins_master_download_repositories\":[], \"jslave_name\":${slaveName}, \"jslave_label\":${slaveName}, \"arch\":${arch} }\'"
               sh "ansible-playbook --inventory workspace/inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
+              connectedToMaster = true
+            }
+            if (params.INSTALL_ANSIBLE) {
               node (slaveName) {
                 sh 'sudo yum install python-devel openssl-devel libffi-devel -y'
                 sh 'sudo pip install --upgrade pip; sudo pip install --upgrade setuptools; sudo pip install --upgrade ansible'
               }
+              ansibleInstalled = true
             }
           } catch (e) {
             error = e.toString()
             provisioned = false
           } finally {
             // Archive slave name in a slave.properties file
-            writeFile(file: "workspace/${slaveTarget}.properties", text: "name:${slaveName}\ntarget:${slaveTarget}\nprovisioned:${provisioned}\nerror:${error}\narch:${arch}")
+            def results = """
+              name:${slaveName}
+              target:${slaveTarget}
+              arch:${arch}"
+              provisioned:${provisioned}
+              jenkins.master.connected:${connectedToMaster}
+              ansible.installed:${ansibleInstalled}
+              error:${error}
+            """
+            writeFile(file: "workspace/${slaveTarget}.properties", text: results)
           }
         }
 
