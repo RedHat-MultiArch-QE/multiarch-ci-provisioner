@@ -41,7 +41,7 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     update-ca-trust extract
 
 # Configure beaker
-RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"$ktenant\"" >> /etc/beaker/client.conf
+RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"$ktenant\"" >> /etc/beaker/client.conf; cat /etc/beaker/client.conf
 
 # Initialize SSH
 WORKDIR /home/jenkins
