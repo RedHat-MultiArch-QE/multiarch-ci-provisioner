@@ -10,6 +10,7 @@ ENV HOME=/root \
 # Copy over configuration files
 COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
 COPY beaker/beaker.conf /etc/beaker/client.conf
+COPY beaker/RedHatInternalCA.pem /etc/beaker/RedHatInternalCA.pem
 COPY krb5/krb5.conf /etc/krb5.conf
 COPY krb5/krb5.keytab /etc/krb5.keytab
 COPY krb5/tenant /home/jenkins/.k5identity
