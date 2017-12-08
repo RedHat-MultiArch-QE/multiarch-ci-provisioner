@@ -13,12 +13,12 @@ properties([
         ),
         booleanParam(
           defaultValue: false,
-          description: 'Run cinch to connect provisioned host to Jenkins master.',
+          description: 'Run Cinch to connect provisioned host to the Jenkins master.',
           name: 'CONNECT_TO_MASTER'
         ),
         booleanParam(
           defaultValue: false,
-          description: 'Install ansible on provisioned host.',
+          description: 'Install Ansible on provisioned host.',
           name: 'INSTALL_ANSIBLE'
         )
     ])
