@@ -62,6 +62,8 @@ podTemplate(
                 projectName: 'provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
           } catch (e) {
+            println e
+
             // The provisioning job did not successfully provision a machine, so there is nothing to teardown
             currentBuild.result = 'SUCCESS'
             return
