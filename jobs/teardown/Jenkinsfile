@@ -53,13 +53,13 @@ podTemplate(
           try {
             // Copy artifacts from build
             step([$class: 'CopyArtifact', filter: 'workspace/inventories/*.inventory',
-                projectName: 'redhat-multiarch-qe/provision-multiarch-slave',
+                projectName: 'redhat-multiarch-qe-provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
             step([$class: 'CopyArtifact', filter: 'workspace/resources/*.output',
-                projectName: 'redhat-multiarch-qe/provision-multiarch-slave',
+                projectName: 'redhat-multiarch-qe-provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
             def properties = step([$class: 'CopyArtifact', filter: 'workspace/*-slave.properties',
-                projectName: 'redhat-multiarch-qe/provision-multiarch-slave',
+                projectName: 'redhat-multiarch-qe-provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
           } catch (e) {
             println e
