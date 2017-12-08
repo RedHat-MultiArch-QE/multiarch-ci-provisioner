@@ -10,7 +10,6 @@ ENV HOME=/root \
 # Copy over configuration files
 COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
 COPY beaker/client.conf /etc/beaker/client.conf
-COPY beaker/RedHatInternalCA.pem /etc/beaker/RedHatInternalCA.pem
 COPY krb5/krb5.conf /etc/krb5.conf
 COPY krb5/krb5.keytab /etc/krb5.keytab
 COPY krb5/tenant /home/jenkins/.k5identity
@@ -42,7 +41,8 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     update-ca-trust extract
 
 # Configure beaker
-RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"$ktenant\"" >> /etc/beaker/client.conf
+RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"$ktenant\"" >> /etc/beaker/client.conf && \
+    cp /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt
 
 # Initialize SSH
 WORKDIR /home/jenkins

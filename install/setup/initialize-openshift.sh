@@ -18,7 +18,7 @@ stty -echo
 read -p "Jenkins Token: " token; echo
 stty echo
 
-oc create secret generic beaker --from-file images/provisioner/secrets/beaker/client.conf --from-file images/provisioner/secrets/beaker/id_rsa --from-file images/provisioner/secrets/beaker/RedHatInternalCA.pem
+oc create secret generic beaker --from-file images/provisioner/secrets/beaker/client.conf --from-file images/provisioner/secrets/beaker/id_rsa 
 oc create secret generic krb5 --from-file images/provisioner/secrets/krb5/krb5.conf --from-file images/provisioner/secrets/krb5/krb5.keytab --from-literal tenant=${ktenant}
 oc create secret generic jenkins --from-literal username=$username --from-literal password=$token
 
