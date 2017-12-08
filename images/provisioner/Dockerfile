@@ -7,15 +7,6 @@ ENV HOME=/root \
     KRB5CCNAME=FILE:/root/krb5cc_0 \
     ANSIBLE_HOST_KEY_CHECKING=False
 
-# Copy over configuration files
-COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
-COPY beaker/client.conf /etc/beaker/client.conf
-COPY krb5/krb5.conf /etc/krb5.conf
-COPY krb5/krb5.keytab /etc/krb5.keytab
-COPY krb5/tenant /home/jenkins/.k5identity
-COPY jenkins/username /home/jenkins/.provisioner_config/jenkins-username
-COPY jenkins/password /home/jenkins/.provisioner_config/jenkins-password
-
 # Set WORKDIR to HOME
 WORKDIR /root
 
@@ -32,6 +23,15 @@ yum clean all
 RUN pip install -U pip setuptools && \
     pip install -U beaker-common beaker-client && \
     pip install -U linchpin==1.0.4 cinch
+
+# Copy over configuration files
+COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
+COPY beaker/client.conf /etc/beaker/client.conf
+COPY krb5/krb5.conf /etc/krb5.conf
+COPY krb5/krb5.keytab /etc/krb5.keytab
+COPY krb5/tenant /home/jenkins/.k5identity
+COPY jenkins/username /etc/cinch/jenkins-username
+COPY jenkins/password /etc/cinch/jenkins-password
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \
