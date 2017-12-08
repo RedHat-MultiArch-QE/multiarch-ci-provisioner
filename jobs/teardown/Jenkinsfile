@@ -41,7 +41,7 @@ podTemplate(
 
         // Prepare the cinch teardown inventory
         stage('Setup') {
-          sh 'tenant=$(< ~/.k5identity); kinit -k $tenant'
+          // sh 'tenant=$(< ~/.k5identity); kinit -k $tenant'
 
           // Clone the provisioning setup
           git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner'
@@ -53,13 +53,13 @@ podTemplate(
           try {
             // Copy artifacts from build
             step([$class: 'CopyArtifact', filter: 'workspace/inventories/*.inventory',
-                projectName: 'redhat-multiarch-qe/provision-multiarch-slave',
+                projectName: 'provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
             step([$class: 'CopyArtifact', filter: 'workspace/resources/*.output',
-                projectName: 'redhat-multiarch-qe/provision-multiarch-slave',
+                projectName: 'provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
-            def properties = step([$class: 'CopyArtifact', filter: '*-slave.properties',
-                projectName: 'redhat-multiarch-qe/provision-multiarch-slave',
+            def properties = step([$class: 'CopyArtifact', filter: 'workspace/*-slave.properties',
+                projectName: 'provision-multiarch-slave',
                 selector: [$class: 'SpecificBuildSelector', buildNumber: params.BUILD_NUMBER]])
           } catch (e) {
             // The provisioning job did not successfully provision a machine, so there is nothing to teardown
@@ -68,7 +68,9 @@ podTemplate(
           }
 
           // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
-          def propertyFiles = findFiles glob: '*-slave.properties'
+          sh 'ls'
+          sh 'ls workspace'
+          def propertyFiles = findFiles glob: 'workspace/*-slave.properties'
           slaveProps = readProperties file: "${propertyFiles[0].path}"
         }
 
