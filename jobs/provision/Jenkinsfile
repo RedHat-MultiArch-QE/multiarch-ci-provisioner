@@ -80,8 +80,7 @@ podTemplate(
                 sh "linchpin --workspace . --verbose up ${slaveTarget}"
               }
               if (params.CONNECT_TO_MASTER) {
-                def extraVars = "\'{ \"rpm_key_imports\":[], \"jenkins_master_repositories\":[], \"jenkins_master_download_repositories\":[], \"jslave_name\":${slaveName}, \"jslave_label\":${slaveName}, \"arch\":${arch} }\'"
-                sh "ansible-playbook --inventory workspace/inventories/${slaveTarget}.inventory --extra-vars ${extraVars} cinch/cinch/site.yml"
+                sh "cinch workspace/inventories/${slaveTarget}.inventory"
                 connectedToMaster = true
               }
               if (params.INSTALL_ANSIBLE) {
