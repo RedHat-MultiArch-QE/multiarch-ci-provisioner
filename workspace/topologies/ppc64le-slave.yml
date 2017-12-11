@@ -1,8 +1,10 @@
 ---
 topology_name: ppc64le-slave
 resource_groups:
-  - resource_group_name: ppc64le
-    resource_group_type: beaker
+- resource_group_name: ppc64le
+  resource_group_type: beaker
+  resource_definitions:
+  - role: bkr_server
     job_group: multiarch-qe
     whiteboard: "ppc64le slave for multiarch testing"
     recipesets:
@@ -10,7 +12,3 @@ resource_groups:
       arch: ppc64le 
       variant: Server
       count: 1
-      hostrequires:
-      - tag: hostname
-        op: "="
-        value: "ibm-p8-storage-03.khw.lab.eng.bos.redhat.com"
