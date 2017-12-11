@@ -1,8 +1,10 @@
 ---
 topology_name: x86_64-slave
 resource_groups:
-  - resource_group_name: x86_64
-    resource_group_type: beaker
+- resource_group_name: x86_64
+  resource_group_type: beaker
+  resource_definitions:
+  - role: bkr_server
     job_group: multiarch-qe
     whiteboard: "x86_64 slave for multiarch testing"
     recipesets:
