@@ -3,10 +3,12 @@ topology_name: aarch64-slave
 resource_groups:
   - resource_group_name: aarch64
     resource_group_type: beaker
-    job_group: multiarch-qe
-    whiteboard: "aarch64 slave for multiarch testing"
-    recipesets:
-    - distro: "RHEL-7.4"
-      arch: aarch64
-      variant: Server
-      count: 1
+    resource_definitions:
+      - role: bkr_server
+        job_group: multiarch-qe
+        whiteboard: "aarch64 slave for multiarch testing"
+        recipesets:
+          - distro: "RHEL-7.4"
+            arch: aarch64
+            variant: Server
+            count: 1
