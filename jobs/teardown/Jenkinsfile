@@ -79,7 +79,7 @@ podTemplate(
         // Preform the actual teardown
         stage('Teardown') {
           try {
-            sh "ansible-playbook --inventory workspace/inventories/${slaveProps.target}.inventory cinch/cinch/teardown.yml"
+            sh "teardown workspace/inventories/${slaveProps.target}.inventory"
           } catch (e) {
             println e
           }
