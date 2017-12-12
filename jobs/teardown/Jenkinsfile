@@ -41,8 +41,6 @@ podTemplate(
 
         // Prepare the cinch teardown inventory
         stage('Setup') {
-          // sh 'tenant=$(< ~/.k5identity); kinit -k $tenant'
-
           // Clone the provisioning setup
           git 'https://github.com/RedHat-MultiArch-QE/multiarch-ci-provisioner'
 
@@ -70,8 +68,6 @@ podTemplate(
           }
 
           // Load slave properties (you may need to turn off sandbox or approve this in Jenkins)
-          sh 'ls'
-          sh 'ls workspace'
           def propertyFiles = findFiles glob: 'workspace/*-slave.properties'
           slaveProps = readProperties file: "${propertyFiles[0].path}"
         }
