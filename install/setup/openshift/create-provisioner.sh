@@ -1,8 +1,7 @@
 #!/bin/bash
 oc login -u developer
 oc create -f templates/provisioner-template.yml
-oc create -f templates/provision-multiarch-slave-template.yml
-oc create -f templates/teardown-multiarch-slave-template.yml
+oc create -f templates/multiarch-ci-test-template-build-template.yml
 
 # Read Kerberos Service Tenant
 read -p "Kerberos Service Tenant: " ktenant
