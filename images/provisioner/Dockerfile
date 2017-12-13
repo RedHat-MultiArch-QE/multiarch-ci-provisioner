@@ -29,8 +29,6 @@ RUN yum install git -y && \
     git clone https://github.com/CentOS-PaaS-SIG/linchpin.git && \
     cd linchpin && \
     git checkout origin/release1.5 && \
-    git checkout -b herlo-ttdi && \
-    git pull https://github.com/herlo/linchpin.git ttdi && \
     pip install ../linchpin && \
     pip install ../linchpin[beaker] && \
     pip install ../linchpin[krb5]
