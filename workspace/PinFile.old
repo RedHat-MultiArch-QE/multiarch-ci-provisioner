@@ -1,3 +1,0 @@
-jenkins-slave:
-  topology: jenkins-slave.yml.old
-  layout: jenkins-slave.yml
