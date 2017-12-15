@@ -26,9 +26,9 @@ RUN pip install -U pip setuptools && \
 
 # Install linchpin 1.5
 RUN yum install git -y && \
-    git clone https://github.com/CentOS-PaaS-SIG/linchpin.git && \
+    git clone https://github.com/jaypoulz/linchpin.git && \
     cd linchpin && \
-    git merge origin/release1.5 && \
+    git merge checkout release1.5 && \
     pip install ../linchpin && \
     pip install ../linchpin[beaker] && \
     pip install ../linchpin[krb5]
