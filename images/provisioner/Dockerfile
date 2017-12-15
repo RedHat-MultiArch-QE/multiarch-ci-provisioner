@@ -28,7 +28,7 @@ RUN pip install -U pip setuptools && \
 RUN yum install git -y && \
     git clone https://github.com/jaypoulz/linchpin.git && \
     cd linchpin && \
-    git merge checkout release1.5 && \
+    git checkout release1.5 && \
     pip install ../linchpin && \
     pip install ../linchpin[beaker] && \
     pip install ../linchpin[krb5]
