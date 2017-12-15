@@ -1,0 +1,12 @@
+---
+topology_name: jenkins-slave
+resource_groups:
+- resource_group_name: beaker-slaves
+  resource_group_type: beaker
+  job_group: multiarch-qe
+  whiteboard: "x86_64 slave for multiarch testing"
+  recipesets:
+  - distro: "RHEL-7.4"
+    arch: x86_64
+    variant: Server
+    count: 1
