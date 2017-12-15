@@ -22,16 +22,7 @@ yum clean all
 # Install all pip dependencies
 RUN pip install -U pip setuptools && \
     pip install -U beaker-common beaker-client && \
-    pip install -U cinch
-
-# Install linchpin 1.5
-RUN yum install git -y && \
-    git clone https://github.com/jaypoulz/linchpin.git && \
-    cd linchpin && \
-    git checkout release1.5b && \
-    pip install ../linchpin && \
-    pip install ../linchpin[beaker] && \
-    pip install ../linchpin[krb5]
+    pip install -U linchpin cinch
 
 # Copy over configuration files
 COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
