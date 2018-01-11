@@ -32,4 +32,5 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     curl -o RedHat_CA.crt --insecure -L https://password.corp.redhat.com/cacert.crt && \
     curl -o PnTDevOps_CA.crt --insecure -L https://engineering.redhat.com/Eng-CA.crt && \
     curl -o RH-IT-Root-CA.crt --insecure -L https://password.corp.redhat.com/RH-IT-Root-CA.crt && \
+    cp RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt
     update-ca-trust extract
