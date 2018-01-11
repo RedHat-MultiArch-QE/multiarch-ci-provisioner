@@ -42,9 +42,6 @@ objects:
         - secret:
             name: beaker
           destinationDir: beaker 
-        - secret:
-            name: jenkins
-          destinationDir: jenkins 
     strategy:
       type: Docker
       dockerStrategy:
