@@ -1,7 +1,6 @@
 FROM openshift/jenkins-slave-base-centos7
 
 # Set home to root directory for caching purposes
-# Set kerberos cache location env variable
 # Disable host key checking explicitly - see https://github.com/ansible/ansible/issues/30720
 ENV HOME=/root \
     ANSIBLE_HOST_KEY_CHECKING=False
@@ -32,5 +31,11 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     curl -o RedHat_CA.crt --insecure -L https://password.corp.redhat.com/cacert.crt && \
     curl -o PnTDevOps_CA.crt --insecure -L https://engineering.redhat.com/Eng-CA.crt && \
     curl -o RH-IT-Root-CA.crt --insecure -L https://password.corp.redhat.com/RH-IT-Root-CA.crt && \
-    cp RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt && \
     update-ca-trust extract
+
+# Configure beaker
+RUN cp /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt
+
+# Set home dir and env HOME var for SSH
+WORKDIR /home/jenkins
+ENV HOME=/home/jenkins
