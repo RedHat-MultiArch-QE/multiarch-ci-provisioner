@@ -59,4 +59,4 @@ parameters:
 - description: The git ref or tag to use for customization.
   displayName: Git Reference
   name: SLAVE_REPO_REF
-  value: v0.3
+  value: v0.3-beta
