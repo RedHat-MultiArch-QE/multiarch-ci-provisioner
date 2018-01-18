@@ -20,11 +20,7 @@ yum clean all
 # Install all pip dependencies
 RUN pip install -U pip setuptools && \
     pip install -U beaker-common beaker-client && \
-    # TODO restore installing from source post linchpin 1.5 release
-    # pip install -U linchpin cinch
-    git clone https://github.com/CentOS-PaaS-SIG/linchpin.git && \
-    cd linchpin && git checkout release1.5 && \
-    pip install -U . && pip install -U cinch
+    pip install -U linchpin cinch
 
 # Copy over configuration files
 COPY beaker/client.conf /etc/beaker/client.conf
