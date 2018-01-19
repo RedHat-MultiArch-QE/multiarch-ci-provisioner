@@ -25,6 +25,8 @@ RUN pip install -U pip setuptools && \
 # Copy over configuration files
 COPY beaker/client.conf /etc/beaker/client.conf
 COPY krb5/krb5.conf /etc/krb5.conf
+RUN chmod 644 /etc/krb5.conf && \
+    chmod 644 /etc/beaker/client.conf
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \
