@@ -14,7 +14,7 @@ The first step to using the multiarch-ci-provisioner is where you need to do a f
 
 ## Jenkins Setup
 ### Jenkins Plugin Dependencies
-Beyond the OpenShift Jenkins image plugins, you'll need to install these plugins to get the pipeline running.
+Beyond the OpenShift Jenkins image plugins, you'll need to install these plugins to get the provisioner running.
 1. AnsiColor
 2. Timestamper
 3. Self-Organizing Swarm Plugin
