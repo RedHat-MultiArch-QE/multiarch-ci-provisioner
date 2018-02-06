@@ -1,10 +1,8 @@
 FROM openshift/jenkins-slave-base-centos7
 
 # Set home to root directory for caching purposes
-# Set kerberos cache location env variable
 # Disable host key checking explicitly - see https://github.com/ansible/ansible/issues/30720
 ENV HOME=/root \
-    KRB5CCNAME=FILE:/root/krb5cc_0 \
     ANSIBLE_HOST_KEY_CHECKING=False
 
 # Set WORKDIR to HOME
@@ -22,16 +20,13 @@ yum clean all
 # Install all pip dependencies
 RUN pip install -U pip setuptools && \
     pip install -U beaker-common beaker-client && \
-    pip install -U linchpin==1.0.4 cinch
+    pip install -U linchpin cinch
 
 # Copy over configuration files
-COPY beaker/id_rsa /home/jenkins/.ssh/id_rsa
 COPY beaker/client.conf /etc/beaker/client.conf
 COPY krb5/krb5.conf /etc/krb5.conf
-COPY krb5/krb5.keytab /etc/krb5.keytab
-COPY krb5/tenant /home/jenkins/.k5identity
-COPY jenkins/username /etc/cinch/jenkins-username
-COPY jenkins/password /etc/cinch/jenkins-password
+RUN chmod 644 /etc/krb5.conf && \
+    chmod 644 /etc/beaker/client.conf
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \
@@ -41,11 +36,8 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     update-ca-trust extract
 
 # Configure beaker
-RUN ktenant=$(< /home/jenkins/.k5identity); echo "KRB_PRINCIPAL = \"${ktenant}@REDHAT.COM\"" >> /etc/beaker/client.conf && \
-    cp /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt
+RUN cp /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt
 
-# Initialize SSH
+# Set home dir and env HOME var for SSH
 WORKDIR /home/jenkins
-RUN chmod 600 .ssh/id_rsa && \
-    eval `ssh-agent -s` && \
-    ssh-add .ssh/id_rsa
+ENV HOME=/home/jenkins
