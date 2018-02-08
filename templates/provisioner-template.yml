@@ -13,10 +13,10 @@ objects:
   kind: ImageStream
   metadata:
     annotations:
-      slave-label: provisioner
+      slave-label: provisioner-${SLAVE_REPO_REF}
     labels:
-      role: provisioner
-    name: provisioner
+      role: jenkins-slave
+    name: provisioner-${SLAVE_REPO_REF}}
     namespace: redhat-multiarch-qe
   spec: {}
 - apiVersion: v1
