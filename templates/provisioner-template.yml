@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: provisioner-builder
+  template: provisioner-${SLAVE_REPO_REF}-builder
 metadata:
   annotations:
     description: Provisioner capable of setting up multi-arch jenkins slaves
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: provisioner-builder
+  name: provisioner-${SLAVE_REPO_REF}-builder
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -16,18 +16,18 @@ objects:
       slave-label: provisioner-${SLAVE_REPO_REF}
     labels:
       role: jenkins-slave
-    name: provisioner-${SLAVE_REPO_REF}}
+    name: provisioner-${SLAVE_REPO_REF}
     namespace: redhat-multiarch-qe
   spec: {}
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: provisioner
+    name: provisioner-${SLAVE_REPO_REF}
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: provisioner:latest
+        name: provisioner-${SLAVE_REPO_REF}:latest
     resources: {}
     source:
       contextDir: ${SLAVE_REPO_CONTEXTDIR}
