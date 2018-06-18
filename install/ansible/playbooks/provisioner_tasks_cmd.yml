@@ -1,0 +1,125 @@
+---
+- name: create redhat-multiarch-qe project
+  shell: >
+    oc login -u developer &&
+    oc get projects |
+    grep "redhat-multiarch-qe" ||
+    oc new-project redhat-multiarch-qe
+
+- name: copy required files to staging area on inventory host
+  block:
+    - name: make temp directory to host required files
+      tempfile:
+        state: directory
+      register: staging_dir
+    - name: copy jenkins template to staging dir
+      template:
+        src: "{{ templates_dir }}/jenkins-persistent.yml"
+        dest: "{{ staging_dir.path }}"
+      register: jenkins_template_staged
+    - name: copy provisioner template to staging dir
+      template:
+        src: "{{ templates_dir }}/provisioner.yml"
+        dest: "{{ staging_dir.path }}"
+      register: provisioner_template_staged
+    - name: copy beaker private key to staging
+      copy:
+        src: "{{ beaker_private_key_path }}"
+        dest: "{{ staging_dir.path }}"
+      register: sshprivkey_staged
+    - name: copy beaker public key to staging
+      copy:
+        src: "{{ beaker_public_key_path }}"
+        dest: "{{ staging_dir.path }}"
+      register: sshpubkey_staged
+    - name: copy kerberos keytab to staging
+      copy:
+        src: "{{ kerberos_keytab_path }}"
+        dest: "{{ staging_dir.path }}"
+      register: keytab_staged
+    - name: copy beaker.conf to staging
+      copy:
+        src: "{{ secrets_dir }}/beaker/client.conf"
+        dest: "{{ staging_dir.path }}"
+      register: beaker_conf_staged
+    - name: copy krb5.conf to staging
+      copy:
+        src: "{{ secrets_dir }}/krb5/krb5.conf"
+        dest: "{{ staging_dir.path }}"
+      register: krb5_conf_staged
+
+- name: upload jenkins container template
+  shell: >
+    oc login -u developer &&
+    oc project redhat-multiarch-qe &&
+    oc get templates -n redhat-multiarch-qe |
+    grep "jenkins-persistent" ||
+    oc create -f {{ jenkins_template_staged.dest }}
+
+- name: deploy jenkins ci container
+  shell: >
+    oc login -u developer &&
+    oc project redhat-multiarch-qe &&
+    oc get deploymentconfigs -n redhat-multiarch-qe |
+    grep "jenkins" ||
+    oc new-app jenkins-persistent --param HOSTNAME={{ openshift_master_hostname }} --param PUBLIC_IP={{ openshift_master_external_ip }}
+
+- name:  create multiarch-qe project with jenkins app and upload associated secrets
+  no_log: true
+  shell: >
+    oc login -u developer &&
+    oc get secrets |
+    grep {{ item.0 }} ||
+    oc create secret generic {{ item.0 }} --from-file=filename={{ item.1 }}
+  with_together:
+    - [sshprivkey, sshpubkey, beaker, bkrconf, krb5, krbconf, keytab]
+    - ["{{ sshprivkey_staged.dest }}",
+       "{{ sshpubkey_staged.dest }}",
+       "{{ beaker_conf_staged.dest }}",
+       "{{ beaker_conf_staged.dest }}",
+       "{{ krb5_conf_staged.dest }}",
+       "{{ krb5_conf_staged.dest }}",
+       "{{ keytab_staged.dest }}"]
+
+- name:  create multiarch-qe project with jenkins app and upload associated secrets
+  no_log: true
+  shell: >
+    oc login -u developer &&
+    oc get secrets |
+    grep krbprincipal ||
+    oc create secret generic krbprincipal --from-literal=username={{ kerberos_principal }} --from-literal=password=none
+
+- name: mark secrets to be synced
+  shell: >
+    oc login -u developer &&
+    oc label secret {{ item }} credential.sync.jenkins.openshift.io=true --overwrite=true
+  with_items:
+    - sshprivkey
+    - sshpubkey
+    - krbprincipal
+    - keytab
+    - krb5
+    - beaker
+    - krbconf
+    - bkrconf
+
+- name: upload jenkins container template
+  shell: >
+    oc login -u developer &&
+    oc project redhat-multiarch-qe &&
+    oc get templates -n redhat-multiarch-qe |
+    grep "provisioner-builder" ||
+    oc create -f {{ provisioner_template_staged.dest }}
+
+- name: deploy jenkins ci container
+  shell: >
+    oc login -u developer &&
+    oc project redhat-multiarch-qe &&
+    oc get pods -n redhat-multiarch-qe |
+    grep "provisioner" ||
+    oc new-app provisioner-builder
+
+- name: Promote Jenkins Service Account to privileged for external Jenkins setups
+  shell: >
+    oc login -u system:admin &&
+    oc adm policy add-scc-to-user anyuid system:serviceaccount:redhat-multiarch-qe:jenkins

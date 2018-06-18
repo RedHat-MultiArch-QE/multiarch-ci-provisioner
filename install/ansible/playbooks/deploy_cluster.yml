@@ -1,0 +1,225 @@
+---
+- name: ensure docker is available
+  become: true
+  block:
+    - name: check for docker availability
+      shell: ((yum list docker >> /dev/null 2>&1) && echo true) || echo false
+      args:
+        warn: no
+      register: docker_available
+    - name: enable pulp repo
+      yum_repository:
+        name: rhel-7-server-extras
+        description: rhel 7 server extras repo
+        file: external_repos
+        baseurl: http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/server/7/7Server/x86_64/extras/os
+        gpgkey: https://www.redhat.com/security/fd431d51.txt
+      when: docker_available.stdout == 'false'
+  when: ansible_distribution == 'RedHat'
+
+- name: install openshift dependencies
+  become: true
+  package:
+    name:
+      - git
+      - docker-1.13.1
+      - firewalld
+      - libselinux-python
+
+- name: download and extract openshift binary to /usr/bin
+  become: true
+  unarchive:
+    src: "{{ openshift_download_url }}"
+    dest: "/usr/bin"
+    exclude:
+      - README.md
+      - LICENSE
+    extra_opts:
+      - '--strip-components=1'
+    remote_src: yes
+    creates: /usr/bin/oc
+  when: openshift_install_mode == 'binary'
+
+- name: change docker storage driver to devicemapper
+  become: true
+  lineinfile:
+    regexp: DOCKER_STORAGE_OPTIONS=.*
+    line: DOCKER_STORAGE_OPTIONS="--storage-driver devicemapper"
+    dest: /etc/sysconfig/docker-storage
+  when: ansible_distribution == 'CentOS'
+
+- name: enable and start firewalld and docker
+  become: true
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+    daemon_reload: true
+  with_items:
+    - firewalld
+    - docker
+
+- name: add openshift to insecure registry
+  become: true
+  lineinfile:
+    regexp: ".*INSECURE_REGISTRY=.*"
+    line: "INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'"
+    dest: /etc/sysconfig/docker
+
+- block:
+    - name: read in docker daemon.json
+      slurp:
+        src: /etc/docker/daemon.json
+      register: docker_json
+      ignore_errors: true
+    - name: update docker daemon mtu to match ci-rhos
+      become: true
+      copy:
+        content: "{{ docker_json.stdout | default('{}') | from_json | combine({ 'mtu' : 1400}) | to_nice_json }}"
+        dest: /etc/docker/daemon.json
+
+- name: add dockerc zone to firewalld
+  become: true
+  shell: >
+    firewall-cmd --reload &&
+    firewall-cmd --get-zones | grep dockerc ||
+    firewall-cmd --permanent --new-zone dockerc &&
+    firewall-cmd --reload &&
+    firewall-cmd --get-zones | grep dockerc &&
+    firewall-cmd --permanent --zone dockerc --add-source 172.17.0.0/16 &&
+    firewall-cmd --reload &&
+    firewall-cmd --get-active-zones | grep dockerc
+
+- name: open firewall ports for docker (ansible <= 2.5.2)
+  command: firewall-cmd --permanent --zone dockerc --add-port {{ item }}
+  become: true
+  with_items:
+    - "8443/tcp"
+    - "53/udp"
+    - "8053/udp"
+    - "50000/tcp"
+  when: ansible_version.full is version('2.5.2', '<=')
+
+- name: open firewall ports for docker (ansible > 2.5.2)
+  become: true
+  firewalld:
+    port: "{{ item }}"
+    zone: "dockerc"
+    permanent: true
+    state: enabled
+  with_items:
+    - "8443/tcp"
+    - "53/udp"
+    - "8053/udp"
+    - "50000/tcp"
+  when: ansible_version.full is version('2.5.2', '>')
+
+- name: get firewalld default zone
+  command: firewall-cmd --get-default-zone
+  become: true
+  register: firewalld_default_zone_raw
+
+- name: open firewall ports for cinch (ansible > 2.5.2)
+  become: true
+  firewalld:
+    port: "{{ item }}"
+    zone: "{{ firewalld_default_zone_raw.stdout }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - 30000/tcp
+    - 8443/tcp
+  when: ansible_version.full is version('2.5.2', '>')
+
+- name: open firewall ports for cinch (ansible <= 2.5.2)
+  command: >
+    firewall-cmd --permanent --zone
+    {{ firewalld_default_zone_raw.stdout }} --add-port {{ item }}
+  become: true
+  with_items:
+    - 30000/tcp
+    - 8443/tcp
+  when: ansible_version.full is version('2.5.2', '<=')
+
+- name: add firewall services for cinch (ansible > 2.5.2)
+  become: true
+  firewalld:
+    zone: "{{ firewalld_default_zone_raw.stdout }}"
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - "http"
+    - "https"
+  when: ansible_version.full is version('2.5.2', '>')
+
+- name: add firewall services for cinch (ansible <= 2.5.2)
+  command: >
+    firewall-cmd --permanent --zone={{ firewalld_default_zone_raw.stdout }} --add-service={{ item }}
+  become: true
+  with_items:
+    - "http"
+    - "https"
+  when: ansible_version.full is version('2.5.2', '<=')
+
+- name: reload firewalld
+  become: true
+  shell: >
+    firewall-cmd --reload
+
+- name: restart firewalld
+  become: true
+  systemd:
+    name: firewalld
+    state: restarted
+    enabled: true
+
+- name: ensure docker group exists
+  become: true
+  group:
+    name: docker
+    state: present
+
+# use shell command in case user is managed with
+# nis or ldap
+- name: add user to docker group
+  become: true
+  shell: usermod {{ ansible_user_id }} -aG docker
+
+- name: restart docker
+  become: true
+  systemd:
+    name: docker
+    daemon_reload: yes
+    state: restarted
+    enabled: true
+
+# there is a bug in ansible where
+# meta: reset_connection fails. this has
+# not yet been fixed upstream
+# A workaround without killing other sessions
+# is to let the ssh connection expire.
+# https://github.com/ansible/ansible/issues/27520
+- block:
+    - name: wait for ssh connection to be released
+      pause:
+        seconds: 90
+    - name: stop oc cluster if started
+      shell: (oc cluster down && echo success) || echo failure
+      register: cluster_down_status
+    # if it failed, try again for ssh to timeout
+    - name: wait for ssh connection to be released (second attempt)
+      pause:
+        seconds: 90
+      when: cluster_down_status.stdout == 'failure'
+    - name: stop oc cluster (second attempt)
+      shell: oc cluster down
+      when: cluster_down_status.stdout == 'failure'
+
+- name: start oc cluster
+  command: >
+    oc cluster up
+       --public-hostname={{ openshift_master_hostname }}
+       --routing-suffix={{ openshift_master_fqdn }}
+       --host-data-dir={{ openshift_host_data_dir }}
+       --use-existing-config

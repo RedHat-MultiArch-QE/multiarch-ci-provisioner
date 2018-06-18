@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: provisioner-builder
+metadata:
+  annotations:
+    description: Provisioner capable of setting up multi-arch jenkins slaves
+    iconClass: icon-jenkins
+    tags: instant-app,jenkins
+  name: provisioner-builder
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      slave-label: provisioner-${SLAVE_REPO_REF}
+    labels:
+      role: jenkins-slave
+    name: provisioner-${SLAVE_REPO_REF}
+    namespace: redhat-multiarch-qe
+  spec: {}
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: provisioner-${SLAVE_REPO_REF}
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: provisioner-${SLAVE_REPO_REF}:latest
+    resources: {}
+    source:
+      contextDir: ${SLAVE_REPO_CONTEXTDIR}
+      git:
+        ref: ${SLAVE_REPO_REF}
+        uri: ${SLAVE_REPO_URL}
+      type: Git
+      secrets:
+        - secret:
+            name: krb5
+          destinationDir: krb5
+        - secret:
+            name: beaker
+          destinationDir: beaker
+    strategy:
+      type: Docker
+      dockerStrategy:
+    triggers:
+    - type: ConfigChange
+parameters:
+- description: Git repository with Dockerfile and slave entrypoint.
+  displayName: Repository URL
+  name: SLAVE_REPO_URL
+  value: https://github.com/{{ github_clone_org }}/multiarch-ci-provisioner.git
+- description: The sub-directory inside the repository.
+  displayName: Context Directory
+  name: SLAVE_REPO_CONTEXTDIR
+  value: images/provisioner
+- description: The git ref or tag to use for customization.
+  displayName: Git Reference
+  name: SLAVE_REPO_REF
+  value: {{ github_repo_ref }}
