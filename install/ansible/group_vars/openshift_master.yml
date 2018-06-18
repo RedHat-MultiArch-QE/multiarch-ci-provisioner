@@ -1,0 +1,38 @@
+# For openshift cluster deployment
+deploy_cluster: true
+# For multiarch-qe provisioner deployment
+deploy_provisioner: true
+
+# openshift configuration options
+openshift_master_external_ip: "{{ (inventory_hostname is match('(?:[0-9]{1,3}\\.){3}[0-9]{1,3}')) | ternary(inventory_hostname, ansible_default_ipv4.address) }}"
+openshift_master_hostname: "{{ (inventory_hostname == 'localhost') | ternary(openshift_master_external_ip, inventory_hostname) }}"
+openshift_master_fqdn: "{{ openshift_master_external_ip }}.xip.io }}"
+openshift_host_data_dir: /var/lib/origin/local
+openshift_install_mode: binary
+
+# container template locations
+templates_dir: "{{ playbook_dir }}/../../templates"
+jenkins_template_path: "{{ templates_dir }}/jenkins-persistent.yml"
+provisioner_template_path: "{{ templates_dir }}/provisioner.yml"
+
+# github repositories
+github_clone_org: redhat-multiarch-qe
+github_repo_ref: v1.0
+
+# openshift_urls
+openshift_version: 3.9.0
+openshift_3_9_0_id: 191fece
+openshift_3_7_2_id: 282e43f
+openshift_3_7_1_id: ab0f056
+openshift_3_7_0_id: 7ed6862
+openshift_3_6_1_id: 008f2d5
+openshift_3_6_0_id: c4dd4cf
+openshift_id: "{{ lookup('vars', 'openshift_' + openshift_version | replace('.', '_') + '_id') }}"
+openshift_download_url: https://github.com/openshift/origin/releases/download/v{{ openshift_version }}/openshift-origin-client-tools-v{{ openshift_version }}-{{ openshift_id }}-linux-64bit.tar.gz
+
+# kerberos and beaker credentials
+credentials_dir: "{{ playbook_dir }}/../../credentials"
+secrets_dir: "{{ playbook_dir }}/../secrets"
+kerberos_keytab_path: "{{ credentials_dir }}/{{ kerberos_principal }}.keytab"
+beaker_private_key_path: "{{ credentials_dir }}/id_rsa"
+beaker_public_key_path: "{{ credentials_dir }}/id_rsa.pub"

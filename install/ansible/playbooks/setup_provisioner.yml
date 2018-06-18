@@ -1,0 +1,63 @@
+---
+- name: check kerberos principal is defined
+  fail:
+    msg: kerberos_principal is empty
+  when: kerberos_principal == ""
+
+- connection: local
+  block:
+    - name: check beaker private key file exists
+      stat:
+        path: "{{ beaker_private_key_path }}"
+      register: bkr_private_key
+    - fail:
+        msg: >
+          beaker private key file does not exist at specified location:
+          {{ beaker_private_key_path }}
+      when: not bkr_private_key.stat.exists
+
+- connection: local
+  block:
+    - name: check beaker public key file exists
+      stat:
+        path: "{{ beaker_public_key_path }}"
+      register: bkr_public_key
+    - fail:
+        msg: >
+          beaker public key file does not exist at specified location:
+          {{ beaker_public_key_path  }}
+      when: not bkr_public_key.stat.exists
+
+- connection: local
+  block:
+    - name: check kerberos keytab file exists
+      stat:
+        path: "{{ kerberos_keytab_path }}"
+      register: krb_keytab
+    - fail:
+        msg: >
+          kerberos keytab file does not exist at specified location:
+          {{ kerberos_keytab_path  }}
+      when: not krb_keytab.stat.exists
+
+- name: install provisioner dependencies
+  become: true
+  package:
+    name:
+      - krb5-workstation
+      - krb5-libs
+      - ansible
+    state: latest
+
+- name: check if python-openshift dependency is satisfied
+  shell: (python -c "import openshift" && echo true) || echo false
+  register: check_python_openshift
+
+- name: install provisioner in ansible mode
+  include_tasks: provisioner_tasks_ansible.yml
+  when: (check_python_openshift.stdout == "true") and ansible_version.full is version('2.5', '>=')
+
+- name: install provisioner in command-line mode
+  include_tasks: provisioner_tasks_cmd.yml
+  when: (check_python_openshift.stdout == "false") or ansible_version.full is version('2.5', '<')
+
