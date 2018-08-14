@@ -3,5 +3,6 @@
 *.out
 *.inventory
 *.output
+*.retry
 downloads/
 credentials/

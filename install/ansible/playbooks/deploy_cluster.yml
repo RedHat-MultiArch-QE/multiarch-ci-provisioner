@@ -98,38 +98,12 @@
     - "53/udp"
     - "8053/udp"
     - "50000/tcp"
-  when: ansible_version.full is version('2.5.2', '<=')
-
-- name: open firewall ports for docker (ansible > 2.5.2)
-  become: true
-  firewalld:
-    port: "{{ item }}"
-    zone: "dockerc"
-    permanent: true
-    state: enabled
-  with_items:
-    - "8443/tcp"
-    - "53/udp"
-    - "8053/udp"
-    - "50000/tcp"
-  when: ansible_version.full is version('2.5.2', '>')
 
 - name: get firewalld default zone
   command: firewall-cmd --get-default-zone
   become: true
   register: firewalld_default_zone_raw
 
-- name: open firewall ports for cinch (ansible > 2.5.2)
-  become: true
-  firewalld:
-    port: "{{ item }}"
-    zone: "{{ firewalld_default_zone_raw.stdout }}"
-    permanent: true
-    state: enabled
-  with_items:
-    - 30000/tcp
-    - 8443/tcp
-  when: ansible_version.full is version('2.5.2', '>')
 
 - name: open firewall ports for cinch (ansible <= 2.5.2)
   command: >
@@ -139,19 +113,6 @@
   with_items:
     - 30000/tcp
     - 8443/tcp
-  when: ansible_version.full is version('2.5.2', '<=')
-
-- name: add firewall services for cinch (ansible > 2.5.2)
-  become: true
-  firewalld:
-    zone: "{{ firewalld_default_zone_raw.stdout }}"
-    service: "{{ item }}"
-    permanent: true
-    state: enabled
-  with_items:
-    - "http"
-    - "https"
-  when: ansible_version.full is version('2.5.2', '>')
 
 - name: add firewall services for cinch (ansible <= 2.5.2)
   command: >
@@ -160,7 +121,6 @@
   with_items:
     - "http"
     - "https"
-  when: ansible_version.full is version('2.5.2', '<=')
 
 - name: reload firewalld
   become: true
@@ -216,10 +176,55 @@
       shell: oc cluster down
       when: cluster_down_status.stdout == 'failure'
 
-- name: start oc cluster
-  command: >
-    oc cluster up
-       --public-hostname={{ openshift_master_hostname }}
-       --routing-suffix={{ openshift_master_fqdn }}
-       --host-data-dir={{ openshift_host_data_dir }}
-       --use-existing-config
+- name: create the maqe-openshift.service start file in sbin
+  become: true
+  template:
+    src: ../../service/maqe-openshift-start.j2
+    dest: /usr/local/sbin/maqe-openshift-start
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+
+- name: copy maqe-openshift.service stop file into sbin
+  become: true
+  copy:
+    src: ../../service/maqe-openshift-stop
+    dest: /usr/local/sbin/maqe-openshift-stop
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0700
+
+- name: copy maqe-openshift.service file into /etc/systemd/system
+  become: true
+  template:
+    src: ../../service/maqe-openshift.service.j2
+    dest: /etc/systemd/system/maqe-openshift.service
+    owner: root
+    group: root
+    mode: 0600
+
+- name: create the /var/lib/origin workspace if it doesn't exist
+  become: true
+  file:
+    path: /var/lib/origin
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create the /var/lib/origin/maqe workspace if it doesn't exist
+  become: true
+  file:
+    path: /var/lib/origin/maqe
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: start maqe-openshift cluster service
+  become: true
+  service:
+    name: maqe-openshift.service
+    enabled: yes
+    daemon-reload: yes
+    state: restarted

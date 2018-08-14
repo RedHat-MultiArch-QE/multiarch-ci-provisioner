@@ -6,7 +6,7 @@ deploy_provisioner: true
 # openshift configuration options
 openshift_master_external_ip: "{{ (inventory_hostname is match('(?:[0-9]{1,3}\\.){3}[0-9]{1,3}')) | ternary(inventory_hostname, ansible_default_ipv4.address) }}"
 openshift_master_hostname: "{{ (inventory_hostname == 'localhost') | ternary(openshift_master_external_ip, inventory_hostname) }}"
-openshift_master_fqdn: "{{ openshift_master_external_ip }}.xip.io }}"
+openshift_master_fqdn: "{{ openshift_master_external_ip }}.xip.io"
 openshift_host_data_dir: /var/lib/origin/local
 openshift_install_mode: binary
 
@@ -17,7 +17,7 @@ provisioner_template_path: "{{ templates_dir }}/provisioner.yml"
 
 # github repositories
 github_clone_org: redhat-multiarch-qe
-github_repo_ref: v1.0
+github_repo_ref: v1.1
 
 # openshift_urls
 openshift_version: 3.9.0
@@ -36,3 +36,6 @@ secrets_dir: "{{ playbook_dir }}/../secrets"
 kerberos_keytab_path: "{{ credentials_dir }}/{{ kerberos_principal }}.keytab"
 beaker_private_key_path: "{{ credentials_dir }}/id_rsa"
 beaker_public_key_path: "{{ credentials_dir }}/id_rsa.pub"
+
+# ansible ssh user default
+ansible_user: ""

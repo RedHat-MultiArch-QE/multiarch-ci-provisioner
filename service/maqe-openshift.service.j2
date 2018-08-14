@@ -1,0 +1,21 @@
+[Unit]
+Description=Multi-Arch QE Single-Node OpenShift Cluster
+Documentation=https://github.com/redhat-multiarch-qe/multiarch-ci-provisioner/wiki
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User={{ ansible_user }}
+ExecStart=/usr/local/sbin/maqe-openshift-start
+ExecStop=/usr/local/sbin/maqe-openshift-stop
+WorkingDirectory=/var/lib/origin/maqe
+Restart=no
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=maqe
+TimeoutSec=900
+
+[Install]
+WantedBy=multi-user.target
