@@ -1,0 +1,6 @@
+#!/bin/bash
+oc cluster up \
+  --public-hostname={{ openshift_master_hostname }} \
+  --routing-suffix={{ openshift_master_fqdn }} \
+  --host-data-dir={{ openshift_host_data_dir }} \
+  --use-existing-config

@@ -1,6 +1,13 @@
 #!/bin/bash
 #
 # Attempts to install OpenShift secrets that will be mounted in Jenkins. Functions from credentials directory.
+create_filename_dirs () {
+  REGEX='^(.*/)(.*)$'
+  [[ $1 =~ $REGEX ]]
+  DIR=${BASH_REMATCH[1]}
+  mkdir -p $DIR
+}
+
 dir=$(pwd)
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 mkdir -p credentials
@@ -16,9 +23,10 @@ if [ "$keytab_option" = "1" ]
 then
     echo "What kerberos principal should be used with this keytab?"
     read -p "Kerberos Principal: " krb_user
-    echo "You are current in $(pwd)"
+    echo "You are currently in $(pwd)"
     read -e -p "Enter the path to the keytab: " keytab
-    cp "$keytab" credentials/$krb_user.keytab
+    create_filename_dirs "credentials/$krb_user.keytab"
+    cp "$keytab" "credentials/$krb_user.keytab"
 elif [ "$keytab_option" = "2" ]
 then
     # Check if we need both packages
@@ -37,7 +45,8 @@ then
     read -sp "Kerberos Password: " pass
     echo
 
-    rm credentials/$krb_user.keytab
+    rm "credentials/$krb_user.keytab"
+    create_filename_dirs "credentials/$krb_user.keytab"
     printf "%b" "addent -password -p $krb_user@REDHAT.COM -k 1 -e aes256-cts-hmac-sha1-96\n$pass\nwrite_kt credentials/$krb_user.keytab" | ktutil 2>&1 > /dev/null
     printf "%b" "read_kt credentials/$krb_user.keytab\nlist" | ktutil
     kinit -k -t credentials/$krb_user.keytab $krb_user@REDHAT.COM
@@ -58,7 +67,7 @@ read -p "Install option (default 0): " key_pair_option
 
 if [ "$key_pair_option" = "1" ]
 then
-    echo "You are current in $(pwd)"
+    echo "You are currently in $(pwd)"
     read -e -p "Enter the path to the private key: " priv_key
     read -e -p "Enter the path to the public key: " pub_key
     cp "$priv_key" credentials/id_rsa
