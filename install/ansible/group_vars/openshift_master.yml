@@ -38,4 +38,4 @@ beaker_private_key_path: "{{ credentials_dir }}/id_rsa"
 beaker_public_key_path: "{{ credentials_dir }}/id_rsa.pub"
 
 # ansible ssh user default
-ansible_user: ""
+ansible_user: "{{ lookup('env', 'USER') }}" 
