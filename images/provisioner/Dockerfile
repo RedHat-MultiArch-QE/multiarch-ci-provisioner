@@ -11,7 +11,7 @@ RUN yum-config-manager --add-repo=http://download.lab.eng.bos.redhat.com/beakerr
     yum install -y epel-release && \
     yum install -y python python-devel python-pip && \
     yum install -y beaker-common beakerlib beaker-client beaker-redhat python-beaker --nogpgcheck && \
-    yum install -y krb5-workstation libvirt-devel libyaml-devel openssl-devel libffi-devel gcc git && \
+    yum install -y krb5-workstation libvirt-devel libyaml-devel openssl-devel libffi-devel gcc && \
     yum clean all
 
 # Install virutalenvwrapper && pip dependencies
@@ -22,9 +22,7 @@ RUN pip install virtualenvwrapper && \
     workon provisioner && \
     pip install -U pip && \
     pip install -U setuptools && \
-    pip install -U linchpin[beaker]==1.5.4 && \
-    git clone https://github.com/redhatqe/cinch.git && \
-    cd cinch && git checkout v1.1.0 && pip install ../cinch
+    pip install -U linchpin[beaker]==1.5.4 cinch==0.9.0
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \
