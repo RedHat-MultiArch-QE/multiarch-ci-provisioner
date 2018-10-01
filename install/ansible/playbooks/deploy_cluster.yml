@@ -26,6 +26,22 @@
       - firewalld
       - libselinux-python
 
+- name: check for oc binary
+  shell: which oc && echo "true" || echo "false"
+  register: oc_exists
+
+- name: check oc version
+  shell: oc version | gawk 'NR==1{print $2}'
+  when: oc_exists and (openshift_install_mode == "binary")
+  register: existing_oc_version
+
+- name: remove oc
+  become: true
+  file:
+    state: absent
+    path: /usr/bin/oc
+  when: (existing_oc_version is defined) and (existing_oc_version.stdout != openshift_version_fullname)
+
 - name: download and extract openshift binary to /usr/bin
   become: true
   unarchive:
@@ -144,7 +160,7 @@
 # nis or ldap
 - name: add user to docker group
   become: true
-  shell: usermod {{ ansible_user_id }} -aG docker
+  shell: usermod {{ ansible_user | default(ansible_user_default) }} -aG docker
 
 - name: restart docker
   become: true
@@ -181,8 +197,8 @@
   template:
     src: ../../service/maqe-openshift-start.j2
     dest: /usr/local/sbin/maqe-openshift-start
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user | default(ansible_user_default) }}"
+    group: "{{ ansible_user | default(ansible_user_default) }}"
     mode: 0700
 
 - name: copy maqe-openshift.service stop file into sbin
@@ -190,8 +206,8 @@
   copy:
     src: ../../service/maqe-openshift-stop
     dest: /usr/local/sbin/maqe-openshift-stop
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user | default(ansible_user_default) }}"
+    group: "{{ ansible_user | default(ansible_user_default) }}"
     mode: 0700
 
 - name: copy maqe-openshift.service file into /etc/systemd/system
@@ -212,14 +228,30 @@
     group: root
     mode: 0755
 
+- name: remove any remnant Kubernetes artifacts
+  become: true
+  file:
+    state: absent
+    path: "~/.kube/{{ openshift_master_hostname }}"
+
+- name: remove any remnant Origin artifacts
+  become: true
+  file:
+    state: absent
+    path: "/var/lib/origin/maqe"
+
 - name: create the /var/lib/origin/maqe workspace if it doesn't exist
   become: true
   file:
     path: /var/lib/origin/maqe
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user | default(ansible_user_default) }}"
+    group: "{{ ansible_user | default(ansible_user_default) }}"
     mode: 0755
+
+- name: Stop any current running instance of oc cluster up
+  become: true
+  shell: oc cluster down
 
 - name: start maqe-openshift cluster service
   become: true

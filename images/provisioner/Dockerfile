@@ -22,7 +22,7 @@ RUN pip install virtualenvwrapper && \
     workon provisioner && \
     pip install -U pip && \
     pip install -U setuptools && \
-    pip install -U linchpin[beaker]==1.5.4 cinch==1.0.0
+    pip install -U ansible==2.5.7 linchpin[beaker]==1.6.2 cinch==1.0.0
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \

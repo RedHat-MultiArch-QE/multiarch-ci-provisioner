@@ -2,5 +2,18 @@
 oc cluster up \
   --public-hostname={{ openshift_master_hostname }} \
   --routing-suffix={{ openshift_master_fqdn }} \
+{% if openshift_version is version('3.10.0', '<') %}
   --host-data-dir={{ openshift_host_data_dir }} \
   --use-existing-config
+{% endif %}
+{% if openshift_version is version('3.10.0', '>=') %}
+  --base-dir={{ openshift_host_data_dir }} \
+  --write-config=true
+{% endif %}
+
+{% if openshift_version is version('3.10.0', '>=') %}
+oc cluster up \
+  --public-hostname={{ openshift_master_hostname }} \
+  --routing-suffix={{ openshift_master_fqdn }} \
+  --base-dir={{ openshift_host_data_dir }}
+{% endif %}
