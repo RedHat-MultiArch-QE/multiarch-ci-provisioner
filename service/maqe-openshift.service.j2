@@ -7,7 +7,7 @@ Requires=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-User={{ ansible_user }}
+User={{ ansible_user | default(ansible_user_default) }}
 ExecStart=/usr/local/sbin/maqe-openshift-start
 ExecStop=/usr/local/sbin/maqe-openshift-stop
 WorkingDirectory=/var/lib/origin/maqe
@@ -15,7 +15,7 @@ Restart=no
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=maqe
-TimeoutSec=900
+TimeoutSec={{ maqe_service_timeout }}
 
 [Install]
 WantedBy=multi-user.target
