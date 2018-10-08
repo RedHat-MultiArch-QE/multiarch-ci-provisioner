@@ -1,6 +1,15 @@
 ---
 - name: upgrade openshift cluster
   hosts: openshift_master
+  vars_prompt:
+    - name: openshift_user
+      private: no
+      prompt: |
+        Please enter openshift admin username.
+    - name: openshift_password
+      private: yes
+      prompt: |
+        Please enter openshift admin password.
   tasks:
     - name: check ansible version is 2.5 or higher
       local_action:
