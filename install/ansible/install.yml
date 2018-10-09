@@ -7,24 +7,7 @@
       prompt: |
         Call ansible-playbook with '-e "kerberos_principal=<your kerberos username>"'
         to skip this prompt. Please enter your kerberos principal.
-    - name: openshift_user
-      private: no
-      prompt: |
-        Please enter openshift admin username.
-    - name: openshift_password
-      private: yes
-      prompt: |
-        Please enter openshift admin password.
-    - name: openshift_password_confirm
-      private: yes
-      prompt: |
-        Please enter openshift admin password again.
   tasks:
-    - name: fail if passwords don't match
-      local_action:
-        module: fail
-        msg: passwords do not match
-      when: openshift_password !=  openshift_password_confirm
     - name: check ansible version is 2.5 or higher
       local_action:
         module: fail
