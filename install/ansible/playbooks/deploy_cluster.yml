@@ -25,6 +25,7 @@
       - docker-1.13.1
       - firewalld
       - libselinux-python
+      - httpd-tools
 
 - name: check for oc binary
   shell: which oc && echo "true" || echo "false"
@@ -254,6 +255,31 @@
   shell: oc cluster down
 
 - name: start maqe-openshift cluster service
+  become: true
+  service:
+    name: maqe-openshift.service
+    enabled: yes
+    daemon-reload: yes
+    state: restarted
+
+- name: set up htpasswd
+  become: true
+  block:
+    - name: change identity provider kind
+      lineinfile:
+        regexp: "      kind: AllowAllPasswordIdentityProvider"
+        line:   "      kind: HTPasswdPasswordIdentityProvider"
+        dest: "/var/lib/origin/openshift.local.config/master/master-config.yaml"
+    - name: set htpasswd file
+      lineinfile:
+        insertafter: "      kind: HTPasswdPasswordIdentityProvider"
+        line:        "      file: users.htpasswd"
+        dest: "/var/lib/origin/openshift.local.config/master/master-config.yaml"
+    - no_log: true
+      command: >
+        htpasswd -bc /var/lib/origin/openshift.local.config/master/users.htpasswd {{ openshift_user }} {{ openshift_password }}
+
+- name: restart maqe-openshift cluster service
   become: true
   service:
     name: maqe-openshift.service

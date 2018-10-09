@@ -1,7 +1,8 @@
 ---
 - name: create redhat-multiarch-qe project
+  no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc get projects |
     grep "redhat-multiarch-qe" ||
     oc new-project redhat-multiarch-qe
@@ -49,8 +50,9 @@
       register: krb5_conf_staged
 
 - name: upload jenkins container template
+  no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc project redhat-multiarch-qe &&
     oc get templates -n redhat-multiarch-qe |
     grep "jenkins-persistent" ||
@@ -58,7 +60,7 @@
 
 - name: deploy jenkins ci container
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc project redhat-multiarch-qe &&
     oc get deploymentconfigs -n redhat-multiarch-qe |
     grep "jenkins" ||
@@ -67,7 +69,7 @@
 - name:  create multiarch-qe project with jenkins app and upload associated secrets
   no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc get secrets |
     grep {{ item.0 }} ||
     oc create secret generic {{ item.0 }} --from-file=filename={{ item.1 }}
@@ -84,14 +86,15 @@
 - name:  create multiarch-qe project with jenkins app and upload associated secrets
   no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc get secrets |
     grep krbprincipal ||
     oc create secret generic krbprincipal --from-literal=username={{ kerberos_principal }} --from-literal=password=none
 
 - name: mark secrets to be synced
+  no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc label secret {{ item }} credential.sync.jenkins.openshift.io=true --overwrite=true
   with_items:
     - sshprivkey
@@ -104,16 +107,18 @@
     - bkrconf
 
 - name: upload jenkins container template
+  no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc project redhat-multiarch-qe &&
     oc get templates -n redhat-multiarch-qe |
     grep "provisioner-builder" ||
     oc create -f {{ provisioner_template_staged.dest }}
 
 - name: deploy jenkins ci container
+  no_log: true
   shell: >
-    oc login -u developer &&
+    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
     oc project redhat-multiarch-qe &&
     oc get pods -n redhat-multiarch-qe |
     grep "provisioner" ||
