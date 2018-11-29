@@ -1,7 +1,6 @@
 ---
 - name: deploy jenkins ci container
-  no_log: true
   shell: >
-    oc login -u {{ openshift_user }} -p {{ openshift_password }} &&
+    oc login -u developer &&
     oc project redhat-multiarch-qe &&
     oc new-app provisioner-builder --param SLAVE_REPO_REF={{ github_repo_ref }}
