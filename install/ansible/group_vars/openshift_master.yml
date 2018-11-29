@@ -17,7 +17,7 @@ provisioner_template_path: "{{ templates_dir }}/provisioner.yml"
 
 # github repositories
 github_clone_org: redhat-multiarch-qe
-github_repo_ref: v1.2.0
+github_repo_ref: v1.2.1
 
 # openshift_urls
 openshift_version: 3.9.0
