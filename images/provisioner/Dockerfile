@@ -4,6 +4,7 @@ FROM openshift/jenkins-slave-base-centos7
 # Disable host key checking explicitly - see https://github.com/ansible/ansible/issues/30720
 ENV HOME=/root \
     ANSIBLE_HOST_KEY_CHECKING=False \
+    ANSIBLE_GATHER_TIMEOUT=25 \
     WORKON_HOME=/home/jenkins/envs
 
 # Install all dependencies from yum
@@ -22,7 +23,7 @@ RUN pip install virtualenvwrapper && \
     workon provisioner && \
     pip install -U pip && \
     pip install -U setuptools && \
-    pip install -U ansible==2.5.7 linchpin[beaker]==1.6.2 cinch==1.0.0
+    pip install -U ansible==2.7.0 linchpin[beaker]==1.6.3 cinch==1.0.0
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \
