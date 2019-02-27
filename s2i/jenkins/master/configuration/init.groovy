@@ -47,3 +47,6 @@ store.addCredentials(domain, credentials)
 logger.info("Setting Time Zone to be EST")
 System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/New_York')
 
+logger.info("Allow archiving of html files with script references")
+System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "sandbox allow-scripts;")
+
