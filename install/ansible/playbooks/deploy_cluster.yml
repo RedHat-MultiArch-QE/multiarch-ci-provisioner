@@ -2,17 +2,30 @@
 - name: ensure docker is available
   become: true
   block:
+    - name: check for git availability
+      shell: ((yum list git >> /dev/null 2>&1) && echo true) || echo false
+      args:
+        warn: no
+      register: git_available
     - name: check for docker availability
       shell: ((yum list docker >> /dev/null 2>&1) && echo true) || echo false
       args:
         warn: no
       register: docker_available
-    - name: enable pulp repo
+    - name: enable pulp rpms repo
       yum_repository:
-        name: rhel-7-server-extras
-        description: rhel 7 server extras repo
+        name: rhel-7-server-test-rpms
+        description: rhel 7 server rpms testing repo
         file: external_repos
-        baseurl: http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/server/7/7Server/x86_64/extras/os
+        baseurl: "{{ rhel_base_url }}/os"
+        gpgkey: https://www.redhat.com/security/fd431d51.txt
+      when: git_available.stdout == 'false'
+    - name: enable pulp extras repo
+      yum_repository:
+        name: rhel-7-server-test-extras
+        description: rhel 7 server extras testing repo
+        file: external_repos
+        baseurl: "{{ rhel_base_url }}/extras/os"
         gpgkey: https://www.redhat.com/security/fd431d51.txt
       when: docker_available.stdout == 'false'
   when: ansible_distribution == 'RedHat'

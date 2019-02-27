@@ -33,5 +33,10 @@ RUN cd /etc/pki/ca-trust/source/anchors && \
     cp /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt /etc/beaker/RH-IT-Root-CA.crt && \
     update-ca-trust extract
 
+# Install brew and jq for parsing json
+RUN yum-config-manager --add-repo=http://download.eng.bos.redhat.com/rel-eng/RCMTOOLS/rcm-tools-rhel-7-server.repo && \
+    yum install -y koji brewkoji jq && \
+    yum clean all
+
 # Set env HOME var for SSH
 ENV HOME=/home/jenkins

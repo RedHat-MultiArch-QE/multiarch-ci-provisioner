@@ -15,9 +15,12 @@ templates_dir: "{{ playbook_dir }}/../../templates"
 jenkins_template_path: "{{ templates_dir }}/jenkins-persistent.yml"
 provisioner_template_path: "{{ templates_dir }}/provisioner.yml"
 
+# rhel mirror url
+rhel_base_url: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/server/{{ ansible_distribution_major_version }}/$releasever/$basearch"
+
 # github repositories
 github_clone_org: redhat-multiarch-qe
-github_repo_ref: v1.2.1
+github_repo_ref: v1.2.2
 
 # openshift_urls
 openshift_version: 3.9.0
@@ -40,6 +43,6 @@ beaker_private_key_path: "{{ credentials_dir }}/id_rsa"
 beaker_public_key_path: "{{ credentials_dir }}/id_rsa.pub"
 
 # ansible ssh user default
-ansible_user_default: "{{ lookup('env', 'USER') }}" 
+ansible_user_default: "{{ lookup('env', 'USER') }}"
 
 maqe_service_timeout: 1800
