@@ -15,7 +15,7 @@ RUN yum-config-manager --add-repo=http://download.lab.eng.bos.redhat.com/beakerr
     yum install -y krb5-workstation libvirt-devel libyaml-devel openssl-devel libffi-devel gcc && \
     yum clean all
 
-# Install virutalenvwrapper && pip dependencies
+# Install virtualenvwrapper && linchpin environment
 RUN pip install virtualenvwrapper && \
     mkdir -p $WORKON_HOME && \
     source $(which virtualenvwrapper.sh) && \
@@ -23,7 +23,16 @@ RUN pip install virtualenvwrapper && \
     workon provisioner && \
     pip install -U pip && \
     pip install -U setuptools && \
-    pip install -U ansible==2.7.0 linchpin[beaker]==1.6.3 cinch==1.0.0
+    pip install -U ansible==2.7.0 linchpin[beaker]==1.7.2 cinch==1.4.0
+
+# Install ansible 2.8 environment
+RUN yum install -y openssh && \
+    source $(which virtualenvwrapper.sh) && \
+    mkvirtualenv --no-site-packages ansible && \
+    workon ansible && \
+    pip install -U pip && \
+    pip install -U setuptools && \
+    pip install -U ansible==2.8.0
 
 # Setup certificates for RedHat
 RUN cd /etc/pki/ca-trust/source/anchors && \
