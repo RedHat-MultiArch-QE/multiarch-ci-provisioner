@@ -3,4 +3,4 @@
   shell: >
     oc login -u developer &&
     oc project redhat-multiarch-qe &&
-    oc new-app provisioner-builder --param SLAVE_REPO_REF={{ github_repo_ref }}
+    oc new-app provisioner --param SLAVE_REPO_REF={{ github_repo_ref }}

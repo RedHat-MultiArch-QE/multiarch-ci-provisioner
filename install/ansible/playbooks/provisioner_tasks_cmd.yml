@@ -108,7 +108,7 @@
     oc login -u developer &&
     oc project redhat-multiarch-qe &&
     oc get templates -n redhat-multiarch-qe |
-    grep "provisioner-builder" ||
+    grep "provisioner" ||
     oc create -f {{ provisioner_template_staged.dest }}
 
 - name: deploy jenkins ci container
@@ -117,7 +117,7 @@
     oc project redhat-multiarch-qe &&
     oc get pods -n redhat-multiarch-qe |
     grep "provisioner" ||
-    oc new-app provisioner-builder
+    oc new-app provisioner
 
 - name: Promote Jenkins Service Account to privileged for external Jenkins setups
   shell: >
