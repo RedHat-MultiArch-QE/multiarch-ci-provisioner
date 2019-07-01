@@ -20,7 +20,7 @@ rhel_base_url: "http://pulp.dist.prod.ext.phx2.redhat.com/content/dist/rhel/serv
 
 # github repositories
 github_clone_org: redhat-multiarch-qe
-github_repo_ref: v1.2.2
+github_repo_ref: v1.3.0
 
 # openshift_urls
 openshift_version: 3.9.0
