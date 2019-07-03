@@ -1,6 +1,20 @@
 ---
+- name: copy required files to staging area on inventory host
+  block:
+    - name: make temp directory to host required files
+      tempfile:
+        state: directory
+      register: staging_dir
+    - name: copy provisioner template to staging dir
+      template:
+        src: "{{ templates_dir }}/provisioner.yml"
+        dest: "{{ staging_dir.path }}"
+      register: provisioner_template_staged
+
 - name: deploy jenkins ci container
   shell: >
     oc login -u developer &&
     oc project redhat-multiarch-qe &&
-    oc new-app provisioner --param SLAVE_REPO_REF={{ github_repo_ref }}
+    oc create -f {{ provisioner_template_staged.dest }} &&
+    oc new-app --template {{ provisioner_template | default('provisioner-builder') }} --param SLAVE_REPO_REF={{ github_repo_ref }}
+  ignore_errors: true

@@ -22,7 +22,7 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: provisioner
+    name: provisioner-${SLAVE_REPO_REF}
   spec:
     output:
       to:
@@ -55,7 +55,7 @@ parameters:
 - description: The sub-directory inside the repository.
   displayName: Context Directory
   name: SLAVE_REPO_CONTEXTDIR
-  value: s2i/jenkins/slave
+  value: {{ provisioner_contextdir | default('images/provisioner') }}
 - description: The git ref or tag to use for customization.
   displayName: Git Reference
   name: SLAVE_REPO_REF
